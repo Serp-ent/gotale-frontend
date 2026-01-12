@@ -1,5 +1,8 @@
 # Projekt Zespołu 11 (2024/25)
 
+> [!NOTE]
+> Ten projekt jest forkiem projektu znajdującego się pod adresem: https://github.com/zesp11/zesp11.github.io
+
 Strona **Zespołu XI** z **Programowania Zespołowego 2024/25** na **Wydziale Matematyki i Informatyki**.
 
 ## Przegląd projektu
