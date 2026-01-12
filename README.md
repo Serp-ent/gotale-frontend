@@ -3,7 +3,7 @@
 > [!NOTE]
 > Ten projekt jest forkiem projektu znajdującego się pod adresem: https://github.com/zesp11/zesp11.github.io
 
-Aplikacja służący do tworzenia interaktywnych gier paragrafowych.
+Aplikacja służy do tworzenia interaktywnych gier paragrafowych.
 
 ## Przegląd projektu
 

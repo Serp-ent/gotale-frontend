@@ -16,48 +16,6 @@ export interface Member {
 
 const members: Member[] = [
   {
-    firstName: "Agnieszka",
-    lastName: "Uznańska",
-    photo: null,
-    github: null,
-    linkedin: 'https://linkedin.com/in/agnieszkauznanska',
-  },
-  {
-    firstName: "Franciszek",
-    lastName: "Szary",
-    photo: null,
-    github: "https://github.com/FranciszekSzary1",
-    linkedin: null,
-  },
-  {
-    firstName: "Cezary",
-    lastName: "Arszyński",
-    photo: null,
-    github: "https://github.com/Delfin22",
-    linkedin: null,
-  },
-  {
-    firstName: "Igor",
-    lastName: "Jeziorski",
-    photo: null,
-    github: 'https://github.com/IgoRix08',
-    linkedin: null,
-  },
-  {
-    firstName: "Kamil",
-    lastName: "Konarzewski",
-    photo: null,
-    github: "https://github.com/K4-mil",
-    linkedin: null,
-  },
-  {
-    firstName: "Paweł",
-    lastName: "Charysz",
-    photo: null,
-    github: "https://github.com/Erdahil",
-    linkedin: null,
-  },
-  {
     firstName: "Kacper",
     lastName: "Urbański",
     photo: null,

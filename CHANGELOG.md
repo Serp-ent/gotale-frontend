@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1
+
+- Removed unused credentials.
+
 ## 0.6.0
 
 - Added API client generation scripts (`scripts/get-schema.sh` and `scripts/generate-api.sh`).
