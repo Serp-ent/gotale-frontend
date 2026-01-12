@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- Added API client generation scripts (`scripts/get-schema.sh` and `scripts/generate-api.sh`).
+
 ## 0.5.0
 
 - Forked the repository from [zesp11/zesp11.github.io](https://github.com/zesp11/zesp11.github.io).

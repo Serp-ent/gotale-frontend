@@ -3,25 +3,39 @@
 > [!NOTE]
 > Ten projekt jest forkiem projektu znajdującego się pod adresem: https://github.com/zesp11/zesp11.github.io
 
-Strona **Zespołu XI** z **Programowania Zespołowego 2024/25** na **Wydziale Matematyki i Informatyki**.
+Aplikacja służący do tworzenia interaktywnych gier paragrafowych.
 
 ## Przegląd projektu
 
-Strona projektu jest stworzona w **Next.js 15** z użyciem **TypeScript**, jest generowana statycznie, zawierająca opis projektu oraz harmonogram w plikach **Markdown**.
+Strona projektu jest stworzona w **Next.js 16** z użyciem **TypeScript**, **React 19** oraz **Tailwind CSS 4**. Jest generowana statycznie, zawierająca opis projektu oraz harmonogram w plikach **Markdown**.
 
 ## Technologie
 
-- **Next.js 15**
+- **Next.js 16**
+- **React 19**
+- **Tailwind CSS 4**
 - **TypeScript**
 - **Markdown**
 
+## Generowanie klienta API
+
+W celu wygenerowania klienta API należy:
+
+1. Pobrać schemat API (wymaga uruchomionego backendu):
+   ```bash
+   ./scripts/get-schema.sh
+   ```
+   **Uwaga:** Pobrany plik `backend-schema.yml` powinien zostać dodany do repozytorium git.
+
+2. Wygenerować klienta na podstawie pobranego schematu:
+   ```bash
+   ./scripts/generate-api.sh
+   ```
+
 ## Instalacja
 
-> [!NOTE]  
-> Strona zespołu była pisana podczas wyjścia Next.js 15 - stąd błędy przy zależnościach
-
 ```bash
-npm install --legacy-peer-deps
+npm install
 ```
 
 ## Uruchomienie aplikacji
