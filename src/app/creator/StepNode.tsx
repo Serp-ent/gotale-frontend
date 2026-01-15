@@ -87,15 +87,20 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
                     value={data.title} 
                     onChange={handleTitleChange} 
                     placeholder="Tytuł kroku" 
-                    className="flex h-9 w-full rounded-md bg-transparent px-3 py-1 text-lg font-bold shadow-none transition-colors placeholder:text-muted-foreground/50 focus-visible:outline-none focus-visible:ring-0"
+                    className="nodrag flex h-9 w-full rounded-md bg-transparent px-3 py-1 text-lg font-bold shadow-none transition-colors placeholder:text-muted-foreground/50 focus-visible:outline-none focus-visible:ring-0"
                 />
             </div>
             <div className="p-4 pt-2">
                 <textarea 
                     value={data.description} 
-                    onChange={handleDescChange} 
+                    onChange={(e) => {
+                        handleDescChange(e);
+                        e.target.style.height = 'auto';
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                    }} 
+                    rows={1}
                     placeholder="Opis kroku..." 
-                    className="flex min-h-[80px] w-full rounded-md bg-muted/30 dark:bg-muted/10 px-3 py-2 text-sm shadow-none placeholder:text-muted-foreground/50 focus-visible:outline-none focus-visible:ring-0 resize-y text-foreground"
+                    className="nodrag flex min-h-[80px] w-full rounded-md bg-muted/30 dark:bg-muted/10 px-3 py-2 text-sm shadow-none placeholder:text-muted-foreground/50 focus-visible:outline-none focus-visible:ring-0 resize-none overflow-hidden text-foreground"
                 />
             </div>
 

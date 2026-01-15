@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.1
+
+- Added auto-expanding description fields and error indicators to the gamebook creator's `StepNode`.
+- Implemented `AuthProvider` and `axiosInstance` for centralized authentication and API handling.
+- Added login modal, user profile, and user details pages.
+- Updated documentation page with links to project reports.
+
 ## 0.7.0
 
 - Added `@xyflow/react` and `dagre` for diagram/flow visualization.
