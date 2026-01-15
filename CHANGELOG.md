@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0
+
+- Added `@xyflow/react` and `dagre` for diagram/flow visualization.
+- Added `sonner` for toast notifications.
+- Added `uuid` utility.
+- Integrated `@openapitools/openapi-generator-cli` for API client generation.
+
 ## 0.6.1
 
 - Removed unused credentials.

@@ -3,6 +3,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "./components/header";
 import { ThemeProvider } from "./components/theme-provider";
+import { AuthProvider } from "./components/auth-provider";
+import LoginModal from "./components/login-modal";
+import { Toaster } from "sonner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,12 +38,16 @@ export default function RootLayout({
           defaultTheme="dark"
           // disableTransitionOnChange
         >
-          {/* add padding because header is fixed */}
-          <div className="md:h-10">
-            <Header />
-          </div>
+          <AuthProvider>
+            {/* add padding because header is fixed */}
+            <div className="md:h-10">
+              <Header />
+            </div>
 
-          {children}
+            {children}
+            <Toaster />
+            <LoginModal />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -2,12 +2,36 @@ import Link from 'next/link';
 
 const directory = '/reports';
 const semesterDirectory = `${directory}/semester`;
+const semesterMainReport = {
+  label: "Raport Kierownika",
+  path: `${semesterDirectory}/main.pdf`,
+};
 
 const semesterIndividualDir = `${semesterDirectory}/individual`
 const semesterIndividualReports = [
   {
+    label: "Cezary Arszyński",
+    path: `${semesterIndividualDir}/ca.pdf`
+  },
+  {
+    label: "Franciszek Szary",
+    path: `${semesterIndividualDir}/fs.pdf`
+  },
+  {
+    label: "Igor Jeziorski-Górecki",
+    path: `${semesterIndividualDir}/ijg.pdf`
+  },
+  {
+    label: "Kamil Konarzewski",
+    path: `${semesterIndividualDir}/kk.pdf`
+  },
+  {
     label: "Kacper Urbański",
     path: `${semesterIndividualDir}/ku.pdf`
+  },
+  {
+    label: "Paweł Charysz",
+    path: `${semesterIndividualDir}/pc.pdf`
   },
 ];
 
@@ -29,8 +53,20 @@ export default function Page() {
           </h2>
         </section>
 
-        {/* Individual Reports Downloads */}
+        {/* Main Report Download */}
         <section className='pl-4'>
+          <h3 className='text-xl font-semibold mb-4'>
+            Raport semestralny:
+          </h3>
+          <a
+            href={semesterMainReport.path}
+            target='_blank'
+            className='text-accent hover:underline block'
+          >
+            {semesterMainReport.label}
+          </a>
+
+          {/* Individual Reports Downloads */}
           {semesterIndividualReports.length > 0 && (
             <div className='mt-6'>
               <h3 className='text-lg font-semibold mb-4'>
@@ -79,9 +115,6 @@ export default function Page() {
               >
                 Specyfikacja funkcjonalna
               </Link>
-              <span className='ml-2 text-sm text-destructive font-semibold'>
-                (nieaktualna - backend i aplikacja mobilna zostały przepisane przy użyciu innych narzędzi)
-              </span>
             </li>
             <li className='relative pl-6 before:absolute before:left-0 before:top-[0.3em] before:text-accent before:content-["▹"] before:mr-2 before:leading-none mt-2'>
               <Link
@@ -93,6 +126,20 @@ export default function Page() {
               </Link>
             </li>
           </ul>
+        </section>
+
+        {/* API Documentation */}
+        <section className='pl-4 mt-8'>
+          <h3 className='text-xl font-semibold mb-4'>
+            Dokumentacja API:
+          </h3>
+          <Link
+            href="https://documenter.getpostman.com/view/36993515/2sAYdhKqiV"
+            target='_blank'
+            className='text-accent hover:underline block'
+          >
+            Dokumentacja API w Postman
+          </Link>
         </section>
 
       </div>

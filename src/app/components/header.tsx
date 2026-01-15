@@ -4,8 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "./ModeToggle";
+import { useAuth } from "./auth-provider";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { User, LogOut, UserCircle } from "lucide-react";
 
 const links = [
   // { url: "/posty", label: "Posty" },
@@ -14,15 +25,18 @@ const links = [
   { url: "/opis", label: "Opis Projektu" },
   { url: "/docs", label: "Dokumentacja" },
   { url: "/kontakt", label: "Kontakt" },
+  { url: "/creator", label: "Kreator" },
 ];
 
 export default function Header() {
+  const { isAuthenticated, user, logout, setShowLoginModal } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0)
   const navRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -109,6 +123,21 @@ export default function Header() {
                 {l.label}
               </Link>
             ))}
+            
+            <div className="mt-2 border-t border-gray-600 pt-2 flex flex-col items-center gap-2">
+              {isAuthenticated ? (
+                 <>
+                    <div className="font-semibold text-accent">{user?.username}</div>
+                    <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="text-sm hover:text-accent">Profil</Link>
+                    <button onClick={() => { logout(); setIsMenuOpen(false); }} className="text-sm text-red-500 hover:text-red-400">Wyloguj</button>
+                 </>
+              ) : (
+                 <Button size="sm" onClick={() => { setShowLoginModal(true); setIsMenuOpen(false); }} className="w-full bg-accent text-white">
+                    Zaloguj się
+                 </Button>
+              )}
+            </div>
+
           </nav>
 
           <div className="flex justify-end mt-2 pr-2">
@@ -131,6 +160,37 @@ export default function Header() {
             </Link>
           ))}
         </nav>
+
+        <div className="mr-4 flex items-center gap-2">
+           {isAuthenticated ? (
+             <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                   <Button variant="ghost" size="icon" className="rounded-full">
+                      <UserCircle className="h-6 w-6" />
+                   </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                   <DropdownMenuLabel>
+                      <div className="flex flex-col">
+                         <span>{user?.username}</span>
+                         <span className="text-xs text-muted-foreground">{user?.email}</span>
+                      </div>
+                   </DropdownMenuLabel>
+                   <DropdownMenuSeparator />
+                   <DropdownMenuItem onClick={() => router.push('/profile')}>
+                      <User className="mr-2 h-4 w-4" /> Profil
+                   </DropdownMenuItem>
+                   <DropdownMenuItem onClick={logout} className="text-red-500 focus:text-red-500">
+                      <LogOut className="mr-2 h-4 w-4" /> Wyloguj
+                   </DropdownMenuItem>
+                </DropdownMenuContent>
+             </DropdownMenu>
+           ) : (
+             <Button size="sm" onClick={() => setShowLoginModal(true)} className="bg-accent hover:bg-accent/90 text-white font-semibold">
+               Zaloguj się
+             </Button>
+           )}
+        </div>
 
         <ModeToggle />
       </section>

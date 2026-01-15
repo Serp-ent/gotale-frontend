@@ -39,6 +39,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# API Client
-src/lib/api_client/
-src/lib/api/
+# generated api client
+/src/lib/api/
+/src/lib/api_client/

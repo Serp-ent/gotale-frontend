@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: GoTale API
-  version: 0.14.0
+  version: 0.14.1
   description: API for zesp11 GoTale app.
 paths:
   /api/auth/register/:
@@ -366,7 +366,6 @@ paths:
       - scenarios
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -394,7 +393,6 @@ paths:
         required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '201':
           content:
@@ -417,7 +415,6 @@ paths:
       - scenarios
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -450,7 +447,6 @@ paths:
               $ref: '#/components/schemas/ScenarioUpdate'
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -483,7 +479,6 @@ paths:
               $ref: '#/components/schemas/PatchedScenarioUpdate'
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -505,7 +500,6 @@ paths:
       - scenarios
       security:
       - jwtAuth: []
-      - {}
       responses:
         '204':
           description: No response body
