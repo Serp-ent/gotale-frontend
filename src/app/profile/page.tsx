@@ -6,6 +6,17 @@ import { UserCircle, Trash2, BookOpen, Loader2 } from "lucide-react";
 import { ScenariosApi, Configuration, Scenario } from '@/lib/api';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import Link from 'next/link';
 
 export default function ProfilePage() {
@@ -37,8 +48,6 @@ export default function ProfilePage() {
   }, [isAuthenticated, fetchScenarios]);
 
   const handleDeleteScenario = async (id: string) => {
-      if (!confirm("Czy na pewno chcesz usunąć ten scenariusz?")) return;
-      
       try {
           const apiConfig = new Configuration({ basePath: 'http://localhost:8000' });
           const scenariosApi = new ScenariosApi(apiConfig, undefined, axiosInstance);
@@ -111,15 +120,32 @@ export default function ProfilePage() {
                                     Utworzono: {new Date(scenario.created_at).toLocaleDateString()}
                                 </p>
                             </div>
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                onClick={() => handleDeleteScenario(scenario.id)}
-                                className="text-destructive hover:text-destructive hover:bg-destructive/10 -mt-1 -mr-1"
-                                title="Usuń scenariusz"
-                            >
-                                <Trash2 size={18} />
-                            </Button>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon" 
+                                        className="text-destructive hover:text-destructive hover:bg-destructive/10 -mt-1 -mr-1"
+                                        title="Usuń scenariusz"
+                                    >
+                                        <Trash2 size={18} />
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Czy na pewno chcesz usunąć ten scenariusz?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Ta akcja jest nieodwracalna. Spowoduje trwałe usunięcie scenariusza "{scenario.title}" z naszych serwerów.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Anuluj</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => handleDeleteScenario(scenario.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                            Usuń
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                         </div>
                     ))}
                 </div>

@@ -27,6 +27,47 @@ import { cn } from '@/lib/utils';
 import dagre from 'dagre';
 import { toast } from 'sonner';
 
+// Reusable Auto-resize Textarea component
+function AutoResizeTextarea({ 
+    value, 
+    onChange, 
+    placeholder, 
+    className 
+}: { 
+    value: string; 
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void; 
+    placeholder?: string;
+    className?: string;
+}) {
+    const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+    const adjustHeight = useCallback(() => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    }, []);
+
+    useEffect(() => {
+        adjustHeight();
+    }, [value, adjustHeight]);
+
+    return (
+        <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => {
+                onChange(e);
+                adjustHeight();
+            }}
+            placeholder={placeholder}
+            className={cn("resize-none overflow-hidden", className)}
+            rows={1}
+        />
+    );
+}
+
 // Configure API Base URL
 const apiConfig = new Configuration({
     basePath: 'http://localhost:8000',
@@ -402,7 +443,7 @@ function CreatorFlow() {
         <Panel position="top-right" className="m-4 pointer-events-none !top-[34px] !sm:top-[60px]">
             <div className={cn(
                 "pointer-events-auto bg-card/95 backdrop-blur-sm text-card-foreground rounded-xl shadow-xl border border-border/50 transition-all duration-300 overflow-hidden flex flex-col",
-                isPanelOpen ? "w-80 p-6" : "w-12 p-2 items-center"
+                isPanelOpen ? "w-80 p-6 max-h-[calc(100vh-6rem)] overflow-y-auto" : "w-12 p-2 items-center"
             )}>
                 {/* Header / Toggle */}
                 <div className={cn("flex items-center gap-2 pb-2 border-b border-border w-full", !isPanelOpen && "border-none pb-0 justify-center")}>
@@ -435,8 +476,8 @@ function CreatorFlow() {
                             </div>
                             <div className="space-y-1">
                                 <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Opis</label>
-                                <textarea 
-                                    className="w-full p-2 rounded-md border bg-background/50 focus:bg-background transition-colors focus:ring-1 focus:ring-accent focus:border-accent outline-none text-sm min-h-[80px] resize-none" 
+                                <AutoResizeTextarea 
+                                    className="w-full p-2 rounded-md border bg-background/50 focus:bg-background transition-colors focus:ring-1 focus:ring-accent focus:border-accent outline-none text-sm min-h-[80px]" 
                                     value={scenarioDesc} 
                                     onChange={e => setScenarioDesc(e.target.value)} 
                                     placeholder="O czym jest ta historia?"

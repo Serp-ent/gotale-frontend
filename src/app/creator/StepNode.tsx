@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { Handle, Position, NodeProps, Node } from '@xyflow/react';
 import { PlusCircle, AlertCircle, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -14,7 +14,20 @@ export type StepNodeData = {
 
 export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
     const [showErrors, setShowErrors] = useState(false);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const hasErrors = data.errors && data.errors.length > 0;
+
+    const adjustHeight = useCallback(() => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    }, []);
+
+    useEffect(() => {
+        adjustHeight();
+    }, [data.description, adjustHeight]);
 
     const handleTitleChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
         data.onChange(id, { title: evt.target.value });
@@ -22,7 +35,8 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
 
     const handleDescChange = useCallback((evt: React.ChangeEvent<HTMLTextAreaElement>) => {
         data.onChange(id, { description: evt.target.value });
-    }, [id, data]);
+        adjustHeight();
+    }, [id, data, adjustHeight]);
 
     const handleAddChild = useCallback((evt: React.MouseEvent) => {
         evt.stopPropagation();
@@ -92,12 +106,9 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
             </div>
             <div className="p-4 pt-2">
                 <textarea 
+                    ref={textareaRef}
                     value={data.description} 
-                    onChange={(e) => {
-                        handleDescChange(e);
-                        e.target.style.height = 'auto';
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                    }} 
+                    onChange={handleDescChange} 
                     rows={1}
                     placeholder="Opis kroku..." 
                     className="nodrag flex min-h-[80px] w-full rounded-md bg-muted/30 dark:bg-muted/10 px-3 py-2 text-sm shadow-none placeholder:text-muted-foreground/50 focus-visible:outline-none focus-visible:ring-0 resize-none overflow-hidden text-foreground"

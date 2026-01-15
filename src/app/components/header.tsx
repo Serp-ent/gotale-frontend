@@ -166,8 +166,8 @@ export default function Header() {
            {isAuthenticated ? (
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                   <Button variant="ghost" size="icon" className="rounded-full">
-                      <UserCircle className="h-6 w-6" />
+                   <Button variant="ghost" size="icon" className="rounded-full h-10 w-10">
+                      <UserCircle className="!h-8 !w-8" />
                    </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">

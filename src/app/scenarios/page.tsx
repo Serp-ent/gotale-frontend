@@ -65,15 +65,19 @@ export default function ScenariosPage() {
                     </div>
                     
                     <div className="mt-4 pt-4 border-t border-border flex justify-between items-center text-sm">
-                        <Link 
-                            href={`/user/${scenario.created_by.id}`} 
-                            className="flex items-center text-accent hover:underline font-medium"
-                        >
-                            <User size={14} className="mr-1" />
-                            {scenario.created_by.username}
-                        </Link>
+                        {scenario.created_by ? (
+                            <Link 
+                                href={`/user/${scenario.created_by.id}`} 
+                                className="flex items-center text-accent hover:underline font-medium"
+                            >
+                                <User size={14} className="mr-1" />
+                                {scenario.created_by.username}
+                            </Link>
+                        ) : (
+                            <span className="text-muted-foreground italic">Anonim</span>
+                        )}
                         <span className="text-muted-foreground text-xs">
-                            {new Date(scenario.created_at).toLocaleDateString()}
+                            {scenario.created_at ? new Date(scenario.created_at).toLocaleDateString() : ""}
                         </span>
                     </div>
                 </div>

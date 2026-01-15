@@ -29,12 +29,13 @@ export default function Page() {
   };
 
   return (
-    <main className="relative mt-8">
-      <Parallax ref={parallaxRef} pages={4}>
+    <main className="relative mt-8 bg-background dark:bg-background">
+      <Parallax ref={parallaxRef} pages={4} style={{ backgroundColor: 'hsl(var(--background))' }}>
         {/* Welcome Section */}
         <ParallaxLayer
           offset={0}
           speed={2}
+          factor={1.1}
           className="relative grid place-content-center h-full"
           style={{
             backgroundImage: "linear-gradient(0deg, hsl(var(--background)) 50%, #FA802F 50%)",
@@ -85,14 +86,14 @@ export default function Page() {
           speed={0.3}
           className="grid place-content-center"
         >
-          <div className="backdrop-blur-sm bg-black bg-opacity-60 py-4 sm:px-6 sm:py-8 text-center rounded space-y-4">
-            <h1 className="text-white text-xl text-nowrap sm:text-4xl font-bold">
+          <div className="backdrop-blur-md bg-card/90 border border-border shadow-2xl py-8 px-6 sm:px-10 text-center rounded-xl space-y-6 max-w-2xl mx-4">
+            <h1 className="text-card-foreground text-xl text-nowrap sm:text-4xl font-bold">
               Witamy na stronie <span className="text-accent">Zespołu 11</span>
             </h1>
-            <p className="text-gray-100 sm:text-lg max-w-lg mx-auto px-2">
+            <p className="text-muted-foreground sm:text-lg max-w-lg mx-auto">
               Nasz projekt ułatwia integrację w zespole dzięki wspólnemu odkrywaniu opowieści, poznawaniu nowych miejsc i budowie świata na podstawie podejmowanych decyzji.
             </p>
-            <div className="font-bold mb-6 text-lg sm:text-3xl text-white">
+            <div className="font-bold text-lg sm:text-2xl text-foreground">
               <TypeAnimation
                 sequence={[
                   'Zintegruj się z zespołem!',
@@ -110,9 +111,9 @@ export default function Page() {
               />
             </div>
 
-            <div className='flex justify-center items-center'>
+            <div className='flex justify-center items-center pt-2'>
               <button
-                className="flex items-center gap-2 sm:text-lg px-3 py-2 sm:px-6 sm:py-3 bg-accent hover:bg-gradient-to-r hover:from-orange-500 hover:to-yellow-500 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300"
+                className="flex items-center gap-2 sm:text-lg px-6 py-3 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-lg shadow-lg shadow-accent/20 transition-all transform hover:scale-105 duration-300"
                 onClick={() => handleScrollToNext(1)}
               >
                 <span>
@@ -130,6 +131,7 @@ export default function Page() {
         <ParallaxLayer
           offset={1}
           speed={0.8}
+          factor={1.5}
           className="relative flex justify-end items-center sm:pr-8 place-content-center 
             bg-[linear-gradient(-11deg,hsl(var(--background))_28%,#9C8B73_50%,#9C8B73_50%,hsl(var(--background))_67%)]
             dark:bg-[linear-gradient(-11deg,hsl(var(--background))_28%,#21262d_50%,#21262d_50%,hsl(var(--background))_67%)]
@@ -150,15 +152,15 @@ export default function Page() {
           {/* Instead of covering the entire background, wrap the text content in a subtle overlay */}
           <div className="relative z-10 grid place-content-center h-full text-white py-20">
             {/* Mobile Section */}
-            <div className="block md:hidden text-center px-4 py-6 rounded 
-                    bg-black bg-opacity-50 backdrop-blur-sm">
+            <div className="block md:hidden text-center px-6 py-8 rounded-xl
+                    bg-card/90 backdrop-blur-md border border-border shadow-xl mx-4 text-card-foreground">
               <h2 className="text-xl sm:text-4xl font-bold mb-6">Gamebook Creator</h2>
-              <p className="mb-4 sm:text-lg">
+              <p className="mb-6 sm:text-lg text-muted-foreground">
                 Za pomocą naszego kreatora gier paragrafowych stwórz interaktywne książki przygodowe, które angażują graczy w pełni dynamiczne historie.
               </p>
               <div className="flex justify-center">
                 <a
-                  className="sm:text-lg px-3 py-2 sm:px-6 sm:py-3 bg-accent hover:bg-gradient-to-r hover:from-orange-500 hover:to-yellow-500 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300 flex items-center justify-center space-x-2"
+                  className="sm:text-lg px-6 py-3 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-lg shadow-lg shadow-accent/20 transition-transform transform hover:scale-105 duration-300 flex items-center justify-center space-x-2"
                   href='https://zesp11.netlify.app'
                 >
                   <span>Twórz teraz</span>
@@ -170,36 +172,36 @@ export default function Page() {
             {/* Desktop Section */}
             <div className="hidden md:grid lg:grid-cols-2 gap-8 max-w-7xl px-4 items-center">
               {/* Text content with a subtle background overlay */}
-              <div className="space-y-6 text-primary dark:text-white p-6 rounded 
-                     bg-black/20 xl:bg-transparent xl:backdrop-blur-none xl:bg-opacity-100 bg-opacity-20 backdrop-blur-sm">
+              <div className="space-y-6 text-card-foreground p-8 rounded-xl
+                     bg-card/80 backdrop-blur-md border border-border shadow-xl">
                 <h2 className="text-4xl font-bold">
                   <span className="text-accent">Twórz</span> Niezwykłe Historie
                 </h2>
-                <p className="text-lg leading-relaxed">
+                <p className="text-lg leading-relaxed text-muted-foreground">
                   Za pomocą naszego kreatora gier paragrafowych stwórz interaktywne książki przygodowe, które angażują graczy w pełni dynamiczne historie.
                 </p>
-                <ul className="space-y-3 text-primary dark:text-accent/90">
-                  <li className="flex items-center gap-2">
-                    <FaCheckCircle />
+                <ul className="space-y-3 text-foreground">
+                  <li className="flex items-center gap-3">
+                    <FaCheckCircle className="text-accent" />
                     Intuicyjny edytor wizualny
                   </li>
-                  <li className="flex items-center gap-2">
-                    <FaCheckCircle />
+                  <li className="flex items-center gap-3">
+                    <FaCheckCircle className="text-accent" />
                     Integracja multimediów
                   </li>
-                  <li className="flex items-center gap-2">
-                    <FaCheckCircle />
+                  <li className="flex items-center gap-3">
+                    <FaCheckCircle className="text-accent" />
                     Asystent AI wspomagający Twoją twórczość
                   </li>
-                  <li className="flex items-center gap-2">
-                    <FaCheckCircle />
+                  <li className="flex items-center gap-3">
+                    <FaCheckCircle className="text-accent" />
                     Tryb wieloosobowy dla wspólnej zabawy
                   </li>
                 </ul>
 
-                <div className="flex justify-center pt-4">
+                <div className="flex justify-center pt-6">
                   <a
-                    className="sm:text-lg px-3 py-2 sm:px-6 sm:py-3 bg-accent hover:bg-gradient-to-r hover:from-orange-500 hover:to-yellow-500 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300 flex items-center justify-center space-x-2"
+                    className="sm:text-lg px-6 py-3 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-lg shadow-lg shadow-accent/20 transition-all transform hover:scale-105 duration-300 flex items-center justify-center space-x-2"
                     href="https://zesp11.netlify.app"
                   >
                     <span>Twórz teraz</span>
@@ -219,6 +221,7 @@ export default function Page() {
         <ParallaxLayer
           offset={2}
           speed={0.8}
+          factor={1.5}
           className="relative grid place-content-center 
     bg-[linear-gradient(11deg,hsl(var(--background))_28%,#9C8B73_50%,#9C8B73_50%,hsl(var(--background))_67%)]
     dark:bg-[linear-gradient(11deg,hsl(var(--background))_28%,#21262d_50%,#21262d_50%,hsl(var(--background))_67%)]"
@@ -306,26 +309,26 @@ export default function Page() {
             <div className="block md:grid md:grid-cols-[1fr_2fr] lg:grid-cols-2 gap-12 max-w-7xl md:px-4 items-center">
               <div />
               <div
-                className="space-y-2 lg:dark:text-white lg:text-primary text-white px-4 sm:px-6 py-6 rounded 
-                     bg-black/50 lg:bg-transparent lg:backdrop-blur-none xl:bg-opacity-100 bg-opacity-20 backdrop-blur-sm">
+                className="space-y-6 text-card-foreground px-8 py-8 rounded-xl
+                     bg-card/80 backdrop-blur-md border border-border shadow-xl">
                 <h2 className="text-xl text-center sm:text-left lg:text-4xl sm:text-2xl font-bold">
                   Twoja Przygoda w<span className="text-accent"> Każdej Kieszeni</span>
                 </h2>
-                <p className="text-lg sm:leading-relaxed">
+                <p className="text-lg sm:leading-relaxed text-muted-foreground">
                   Zawsze miej swoje książki przygodowe pod ręką dzięki naszej aplikacji
                   mobilnej
                 </p>
 
                 <div className="hidden sm:grid grid-cols-2 gap-4">
-                  <div className="p-4 dark:bg-white/5 bg-white/15 rounded-xl">
+                  <div className="p-4 bg-muted/50 rounded-xl border border-border">
                     <TbDeviceMobile className="text-3xl text-accent mb-2" />
-                    <h3 className="font-semibold">Mobilność</h3>
-                    <p className="text-sm opacity-75">urządzenia z systemem Android</p>
+                    <h3 className="font-semibold text-foreground">Mobilność</h3>
+                    <p className="text-sm text-muted-foreground">urządzenia z systemem Android</p>
                   </div>
-                  <div className="p-4 dark:bg-white/5 bg-white/15 rounded-xl">
+                  <div className="p-4 bg-muted/50 rounded-xl border border-border">
                     <TbCloud className="text-3xl text-accent mb-2" />
-                    <h3 className="font-semibold">Synchronizacja</h3>
-                    <p className="text-sm opacity-75">Dane zawsze aktualne</p>
+                    <h3 className="font-semibold text-foreground">Synchronizacja</h3>
+                    <p className="text-sm text-muted-foreground">Dane zawsze aktualne</p>
                   </div>
                 </div>
 
@@ -334,7 +337,7 @@ export default function Page() {
                     <a
                       href="/gotale.apk"
                       download
-                      className="sm:text-lg px-3 py-2 sm:px-6 sm:py-3 bg-accent hover:bg-gradient-to-r hover:from-orange-500 hover:to-yellow-500 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300 flex items-center justify-center space-x-2"
+                      className="sm:text-lg px-6 py-3 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-lg shadow-lg shadow-accent/20 transition-all transform hover:scale-105 duration-300 flex items-center justify-center space-x-2"
                       onClick={(e) => {
                         e.preventDefault();
                         const notification = document.getElementById('apk-notification');
@@ -353,7 +356,7 @@ export default function Page() {
                     </a>
                     <div
                       id="apk-notification"
-                      className="fixed bottom-4 right-4 bg-black/80 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50 pointer-events-none"
+                      className="fixed bottom-4 right-4 bg-popover text-popover-foreground border border-border px-4 py-2 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50 pointer-events-none"
                     >
                       Aplikacja nie jest publicznie dostępna
                     </div>
@@ -457,15 +460,15 @@ export default function Page() {
           <div
             className="grid place-content-center h-full py-20"
           >
-            <div className="text-center px-4 text-white bg-black/50 backdrop-blur-sm py-6 rounded">
-              <h2 className="text-xl font-bold mb-6 sm:text-4xl">Gotowy do działania?</h2>
-              <p className="mb-8 sm:text-lg">
+            <div className="text-center px-8 py-10 text-card-foreground bg-card/90 backdrop-blur-md rounded-xl shadow-2xl border border-border mx-4 max-w-2xl">
+              <h2 className="text-xl font-bold mb-4 sm:text-4xl">Gotowy do działania?</h2>
+              <p className="mb-8 sm:text-lg text-muted-foreground">
                 Dołącz do nas i stwórz swoje interaktywne książki przygodowe!
               </p>
 
               <div className='flex justify-center'>
                 <Link
-                  className="sm:text-lg px-3 py-2 sm:px-6 sm:py-3 bg-accent hover:bg-gradient-to-r hover:from-orange-500 hover:to-yellow-500 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300 flex items-center justify-center space-x-2"
+                  className="sm:text-lg px-6 py-3 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold rounded-lg shadow-lg shadow-accent/20 transition-all transform hover:scale-105 duration-300 flex items-center justify-center space-x-2"
                   href="/opis"
                 >
                   <span>Rozpocznij teraz</span>

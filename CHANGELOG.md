@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+
+- Redesigned and improved the Front Page with better layout and visuals.
+- Added `AlertDialog` component from Radix UI for confirmation dialogs.
+- Enhanced Gamebook Creator with better step node interactions and UI.
+- Improved Scenario and User Profile pages with better data fetching and presentation.
+
 ## 0.7.2
 
 - Added Scenario browsing and details pages.

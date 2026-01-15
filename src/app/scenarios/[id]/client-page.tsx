@@ -58,18 +58,24 @@ export default function ScenarioDetailPage() {
         <div className="bg-muted/30 p-8 border-b border-border">
             <h1 className="text-4xl font-bold mb-4">{scenario.title}</h1>
             <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
-                <Link href={`/user/${scenario.created_by.id}`} className="flex items-center hover:text-accent transition-colors">
-                    <User size={16} className="mr-2" />
-                    {scenario.created_by.username}
-                </Link>
-                <span className="flex items-center">
-                    <Calendar size={16} className="mr-2" />
-                    Utworzono: {new Date(scenario.created_at).toLocaleDateString()}
-                </span>
-                <span className="flex items-center">
-                    <Clock size={16} className="mr-2" />
-                    Zaktualizowano: {new Date(scenario.modified_at).toLocaleDateString()}
-                </span>
+                {scenario.created_by && (
+                    <Link href={`/user/${scenario.created_by.id}`} className="flex items-center hover:text-accent transition-colors">
+                        <User size={16} className="mr-2" />
+                        {scenario.created_by.username}
+                    </Link>
+                )}
+                {scenario.created_at && (
+                    <span className="flex items-center">
+                        <Calendar size={16} className="mr-2" />
+                        Utworzono: {new Date(scenario.created_at).toLocaleDateString()}
+                    </span>
+                )}
+                {scenario.modified_at && (
+                    <span className="flex items-center">
+                        <Clock size={16} className="mr-2" />
+                        Zaktualizowano: {new Date(scenario.modified_at).toLocaleDateString()}
+                    </span>
+                )}
             </div>
         </div>
 

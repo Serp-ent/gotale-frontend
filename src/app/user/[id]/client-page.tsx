@@ -42,7 +42,7 @@ export default function UserProfilePage() {
           const scenariosApi = new ScenariosApi(apiConfig, undefined, axiosInstance);
           const response = await scenariosApi.scenariosList();
           // Client-side filtering for now
-          const userScenarios = response.data.filter(s => s.created_by.id === id);
+          const userScenarios = response.data.filter(s => s.created_by && s.created_by.id === id);
           setScenarios(userScenarios);
       } catch (error) {
           console.error("Failed to fetch scenarios", error);
