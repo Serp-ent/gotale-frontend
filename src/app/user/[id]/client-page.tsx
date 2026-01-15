@@ -1,0 +1,130 @@
+"use client";
+
+import { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'next/navigation';
+import { UsersApi, User, Configuration, ScenariosApi, Scenario } from '@/lib/api';
+import { axiosInstance } from '@/app/components/auth-provider';
+import { UserCircle, Loader2, BookOpen } from "lucide-react";
+import { toast } from 'sonner';
+import Link from 'next/link';
+
+export default function UserProfilePage() {
+  const params = useParams();
+  const id = params?.id as string;
+  const [user, setUser] = useState<User | null>(null);
+  const [scenarios, setScenarios] = useState<Scenario[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingScenarios, setIsLoadingScenarios] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!id) return;
+      try {
+        const apiConfig = new Configuration({ basePath: 'http://localhost:8000' });
+        const usersApi = new UsersApi(apiConfig, undefined, axiosInstance);
+        const response = await usersApi.usersRetrieve(id);
+        setUser(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user", error);
+        toast.error("Nie znaleziono użytkownika.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [id]);
+
+  const fetchScenarios = useCallback(async () => {
+      if (!id) return;
+      try {
+          const apiConfig = new Configuration({ basePath: 'http://localhost:8000' });
+          const scenariosApi = new ScenariosApi(apiConfig, undefined, axiosInstance);
+          const response = await scenariosApi.scenariosList();
+          // Client-side filtering for now
+          const userScenarios = response.data.filter(s => s.created_by.id === id);
+          setScenarios(userScenarios);
+      } catch (error) {
+          console.error("Failed to fetch scenarios", error);
+      } finally {
+          setIsLoadingScenarios(false);
+      }
+  }, [id]);
+
+  useEffect(() => {
+      fetchScenarios();
+  }, [fetchScenarios]);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto mt-20 p-4 flex justify-center">
+        <Loader2 className="animate-spin text-accent" size={48} />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="container mx-auto mt-20 p-4 text-center">
+        <h1 className="text-2xl font-bold mb-4">Użytkownik nie istnieje</h1>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto mt-20 p-4 max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Profile Card */}
+        <div className="bg-card text-card-foreground p-6 rounded-xl shadow-md border border-border flex flex-col items-center h-fit md:col-span-1">
+            <div className="bg-accent/10 p-4 rounded-full mb-4">
+                <UserCircle size={64} className="text-accent" />
+            </div>
+            <h1 className="text-2xl font-bold mb-1 text-center break-all">{user.username}</h1>
+            {user.email && <p className="text-muted-foreground mb-6 text-sm text-center break-all">{user.email}</p>}
+
+            <div className="w-full space-y-3 text-left">
+                <div className="p-3 bg-background rounded-lg border border-border">
+                    <span className="text-xs font-bold text-muted-foreground uppercase">Imię</span>
+                    <p className="text-sm font-medium">{user.first_name || '-'}</p>
+                </div>
+                <div className="p-3 bg-background rounded-lg border border-border">
+                    <span className="text-xs font-bold text-muted-foreground uppercase">Nazwisko</span>
+                    <p className="text-sm font-medium">{user.last_name || '-'}</p>
+                </div>
+            </div>
+        </div>
+
+        {/* Scenarios List */}
+        <div className="md:col-span-2 space-y-4">
+            <h2 className="text-2xl font-bold flex items-center">
+                <BookOpen className="mr-2" /> Scenariusze Użytkownika
+            </h2>
+            
+            {isLoadingScenarios ? (
+                <div className="flex justify-center p-8">
+                    <Loader2 className="animate-spin text-accent" />
+                </div>
+            ) : scenarios.length === 0 ? (
+                <div className="text-center p-8 border-2 border-dashed border-border rounded-xl text-muted-foreground">
+                    Ten użytkownik nie opublikował jeszcze żadnych scenariuszy.
+                </div>
+            ) : (
+                <div className="grid gap-4">
+                    {scenarios.map(scenario => (
+                        <div key={scenario.id} className="bg-card text-card-foreground p-4 rounded-xl shadow-sm border border-border hover:shadow-md transition-shadow group">
+                            <Link href={`/scenarios/${scenario.id}`} className="block">
+                                <h3 className="font-bold text-lg group-hover:text-accent transition-colors">{scenario.title}</h3>
+                            </Link>
+                            <p className="text-muted-foreground text-sm line-clamp-2">{scenario.description || "Brak opisu"}</p>
+                            <p className="text-xs text-muted-foreground mt-2">
+                                Utworzono: {new Date(scenario.created_at).toLocaleDateString()}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,5 +1,7 @@
 # Opis Projektu
 
+# TODO: aktualizacja opisu
+
 ## Wstęp
 
 Projekt **GoTale** to innowacyjne rozwiązanie, które łączy miłośników przygód i gier miejskich w jednym interaktywnym systemie. Naszym celem jest stworzenie aplikacji umożliwiającej graczom odkrywanie świata poprzez wspólne tworzenie i przeżywanie interaktywnych książek przygodowych (gamebooków). Gracze mogą tworzyć zespoły, podejmować decyzje w grze, a ich działania będą wymagały fizycznego przemieszczania się po mieście przy użyciu GPS.
@@ -46,7 +48,7 @@ Projekt składa się z trzech głównych komponentów:
   **Główne funkcje**:
 
   - **Tworzenie i edycja gamebooków**  
-    Narratorzy mogą projektować nieliniowe historie, w których każda decyzja graczy prowadzi do różnych rezultatów.
+    Narratorzy mogą projektować nieliniowe historie, w których każda decyzja graczy prowadzi do różnych rezultatów. (Wymagane zalogowanie).
   - **Personalizacja historii**  
     Możliwość ustalania zasad gry, takich jak liczba graczy w drużynie, czas na wykonanie misji czy poziom trudności.
   - **Lokalizacja na mapie**  

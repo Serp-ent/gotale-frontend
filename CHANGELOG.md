@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.2
+
+- Added Scenario browsing and details pages.
+- Refactored User Profile and User Details pages for better interactivity.
+- Improved Gamebook Creator logic and UI.
+- Added `Sonner` UI component wrapper.
+- Added `@types/dagre` for type safety.
+
 ## 0.7.1
 
 - Added auto-expanding description fields and error indicators to the gamebook creator's `StepNode`.

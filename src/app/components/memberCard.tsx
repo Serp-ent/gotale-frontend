@@ -1,6 +1,13 @@
 import Image from "next/image";
-import { Member } from "../(nonMainPage)/zespol/page";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
+
+export interface Member {
+  firstName: string;
+  lastName: string;
+  photo?: string;
+  github?: string;
+  linkedin?: string;
+}
 
 interface MemberCardProps {
   member: Member;

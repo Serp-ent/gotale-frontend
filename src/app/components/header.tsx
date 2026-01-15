@@ -20,6 +20,7 @@ import { User, LogOut, UserCircle } from "lucide-react";
 
 const links = [
   // { url: "/posty", label: "Posty" },
+  { url: "/scenarios", label: "Scenariusze" },
   { url: "/harmonogram", label: "Harmonogram" },
   { url: "/zespol", label: "Zespół" },
   { url: "/opis", label: "Opis Projektu" },
@@ -75,7 +76,7 @@ export default function Header() {
       >
         <div className="aspect-square h-8 grid place-content-center">
           <Image
-            src="logo.svg"
+            src="/logo.svg"
             alt="GoTale logo"
             width={36}
             height={36}

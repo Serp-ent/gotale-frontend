@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from 'uuid';
 import StepNode, { StepNodeData } from './StepNode';
 import { Button } from '@/components/ui/button';
 import { ScenariosApi, Configuration, StepCreate, ChoiceCreate } from '@/lib/api';
-import { axiosInstance } from '@/app/components/auth-provider';
+import { axiosInstance, useAuth } from '@/app/components/auth-provider';
 import { Plus, Save, MousePointerClick, ChevronRight, Settings2, LayoutDashboard, X, Check, Edit3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import dagre from 'dagre';
@@ -46,9 +46,11 @@ const nodeHeight = 250;
 
 function CreatorFlow() {
   const { setNodes: rfSetNodes, setEdges: rfSetEdges, getNodes, getEdges } = useReactFlow();
+  const { user } = useAuth();
   const [scenarioTitle, setScenarioTitle] = React.useState("Nowy Scenariusz");
   const [scenarioDesc, setScenarioDesc] = React.useState("Opis twojej nowej przygody...");
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [generalError, setGeneralError] = useState<string | null>(null);
   
   // State for edge editing
   const [editingEdgeId, setEditingEdgeId] = useState<string | null>(null);
@@ -113,15 +115,12 @@ function CreatorFlow() {
           label: 'Dalej' 
       }, eds));
 
-      toast.success("Dodano nowy krok");
-
   }, [rfSetNodes, rfSetEdges, getNodes, getEdges, onNodeChangeData]); // onDeleteStep added to deps below
 
   // Delete step handler
   const onDeleteStep = useCallback((id: string) => {
       rfSetNodes((nds) => nds.filter((node) => node.id !== id));
       rfSetEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
-      toast.success("Usunięto krok");
   }, [rfSetNodes, rfSetEdges]);
 
   // Initial nodes
@@ -141,7 +140,7 @@ function CreatorFlow() {
   ], [onNodeChangeData, onAddChild, onDeleteStep]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(defaultNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -155,7 +154,6 @@ function CreatorFlow() {
             return;
         }
         setEdges((eds) => addEdge({ ...params, type: 'default', label: 'Dalej' }, eds));
-        toast.success("Połączono kroki");
     },
     [setEdges, getEdges],
   );
@@ -175,7 +173,6 @@ function CreatorFlow() {
               return e;
           }));
           setEditingEdgeId(null);
-          toast.success("Zaktualizowano wybór");
       }
   }, [editingEdgeId, editingEdgeLabel, setEdges]);
 
@@ -207,7 +204,6 @@ function CreatorFlow() {
     });
 
     rfSetNodes(layoutedNodes);
-    toast.info("Układ zaktualizowany");
   }, [getNodes, getEdges, rfSetNodes]);
 
   // Add onDelete to dynamically added steps
@@ -229,12 +225,11 @@ function CreatorFlow() {
       },
     };
     setNodes((nds) => nds.concat(newNode));
-    toast.success("Dodano luźny krok");
   }, [setNodes, onNodeChangeData, onAddChild, onDeleteStep]);
 
   const clearErrors = useCallback(() => {
     rfSetNodes((nds) => nds.map(n => ({ ...n, data: { ...n.data, errors: undefined } })));
-    toast.info("Wyczyszczono błędy");
+    setGeneralError(null);
   }, [rfSetNodes]);
 
   const saveScenario = async () => {
@@ -242,6 +237,7 @@ function CreatorFlow() {
     
     // Clear previous errors
     rfSetNodes((nds) => nds.map(n => ({ ...n, data: { ...n.data, errors: undefined } })));
+    setGeneralError(null);
 
     try {
       const edgesBySource = edges.reduce((acc, edge) => {
@@ -267,6 +263,8 @@ function CreatorFlow() {
       });
 
       const payload = {
+          id: uuidv4(),
+          created_by: user?.id || "",
           title: scenarioTitle,
           description: scenarioDesc,
           steps: steps,
@@ -284,34 +282,56 @@ function CreatorFlow() {
 
       if (error.response && error.response.data) {
           const data = error.response.data;
-          
-          if (data.steps && typeof data.steps === 'object') {
-              // Handle step-specific errors
-              const stepErrors = Object.entries(data.steps).map(([stepId, messages]: [string, any]) => {
-                  const node = nodes.find(n => n.id === stepId);
-                  const nodeTitle = node ? `"${node.data.title}"` : "Nieznany krok";
-                  const msgs = Array.isArray(messages) ? messages : [String(messages)];
-                  
-                  // Update node with errors
-                  rfSetNodes((nds) => nds.map(n => {
-                      if (n.id === stepId) {
-                          return { ...n, data: { ...n.data, errors: msgs } };
-                      }
-                      return n;
-                  }));
+          const stepErrorsMap: Record<string, string[]> = {};
+          const generalErrors: string[] = [];
 
-                  return `Krok ${nodeTitle}: ${msgs.join(", ")}`;
-              });
+          // Handle 'non_field_errors' (top-level errors)
+          if (data.non_field_errors && Array.isArray(data.non_field_errors)) {
+              generalErrors.push(...data.non_field_errors);
+          }
+
+          // Handle 'steps' errors
+          if (data.steps && typeof data.steps === 'object') {
+             Object.entries(data.steps).forEach(([key, messages]: [string, any]) => {
+                 const msgs = Array.isArray(messages) ? messages : [String(messages)];
+                 
+                 // Check if it's a nested non_field_error or similar
+                 if (key === 'non_field_errors') {
+                     generalErrors.push(...msgs);
+                 } else {
+                     stepErrorsMap[key] = msgs;
+                 }
+             });
+          }
+
+          // Handle generic detail error
+          if (data.detail) {
+              generalErrors.push(data.detail);
+          }
+
+          // If we found step errors, update nodes
+          if (Object.keys(stepErrorsMap).length > 0) {
+              errorMessage = "Błąd walidacji kroków";
               
-              if (stepErrors.length > 0) {
-                  errorMessage = "Błąd walidacji kroków";
+              rfSetNodes((nds) => nds.map(n => {
+                  if (stepErrorsMap[n.id]) {
+                      return { ...n, data: { ...n.data, errors: stepErrorsMap[n.id] } };
+                  }
+                  return n;
+              }));
+
+              if (generalErrors.length === 0) {
                   errorDescription = "Błędy zostały zaznaczone na diagramie.";
               }
-          } else if (data.detail) {
-               errorDescription = data.detail;
-          } else {
-               // Fallback for other validation errors
-               errorDescription = JSON.stringify(data);
+          }
+
+          // If we have general errors, show them in description and set state
+          if (generalErrors.length > 0) {
+              errorDescription = generalErrors.join("\n");
+              setGeneralError(errorDescription);
+          } else if (Object.keys(stepErrorsMap).length === 0 && !data.detail) {
+              // Fallback if structure is unknown but data exists
+              errorDescription = JSON.stringify(data);
           }
       }
 
@@ -434,7 +454,15 @@ function CreatorFlow() {
                             <Button onClick={addStep} variant="outline" className="w-full border-dashed border-2 hover:border-accent hover:bg-accent/10 hover:text-accent transition-colors">
                                 <Plus className="mr-2 h-4 w-4" /> Dodaj luźny krok
                             </Button>
-                            {nodes.some(n => n.data.errors && n.data.errors.length > 0) && (
+                            
+                            {/* General Error Display */}
+                            {generalError && (
+                                <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md text-destructive text-xs font-medium animate-in slide-in-from-top-2">
+                                    {generalError}
+                                </div>
+                            )}
+
+                            {(nodes.some(n => n.data.errors && n.data.errors.length > 0) || generalError) && (
                                 <Button onClick={clearErrors} variant="outline" className="w-full border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 hover:border-red-300 dark:hover:border-red-800 animate-in zoom-in-95 duration-300">
                                     <X className="mr-2 h-4 w-4" /> Wyczyść błędy
                                 </Button>
@@ -462,6 +490,26 @@ function CreatorFlow() {
 }
 
 export default function Page() {
+    const { isAuthenticated, isLoading, setShowLoginModal } = useAuth();
+
+    if (isLoading) {
+        return null;
+    }
+
+    if (!isAuthenticated) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[calc(100vh-4rem)] bg-slate-100 dark:bg-zinc-950 text-center px-4">
+                 <div className="max-w-md space-y-4">
+                    <h2 className="text-2xl font-bold">Wymagane logowanie</h2>
+                    <p className="text-muted-foreground">Musisz być zalogowany, aby tworzyć scenariusze.</p>
+                    <Button onClick={() => setShowLoginModal(true)} className="bg-accent text-white hover:bg-accent/90">
+                        Zaloguj się
+                    </Button>
+                 </div>
+            </div>
+        );
+    }
+
     return (
         <ReactFlowProvider>
             <CreatorFlow />

@@ -5,7 +5,7 @@ import Header from "./components/header";
 import { ThemeProvider } from "./components/theme-provider";
 import { AuthProvider } from "./components/auth-provider";
 import LoginModal from "./components/login-modal";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

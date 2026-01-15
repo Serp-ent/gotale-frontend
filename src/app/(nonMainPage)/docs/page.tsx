@@ -2,36 +2,12 @@ import Link from 'next/link';
 
 const directory = '/reports';
 const semesterDirectory = `${directory}/semester`;
-const semesterMainReport = {
-  label: "Raport Kierownika",
-  path: `${semesterDirectory}/main.pdf`,
-};
 
 const semesterIndividualDir = `${semesterDirectory}/individual`
 const semesterIndividualReports = [
   {
-    label: "Cezary Arszyński",
-    path: `${semesterIndividualDir}/ca.pdf`
-  },
-  {
-    label: "Franciszek Szary",
-    path: `${semesterIndividualDir}/fs.pdf`
-  },
-  {
-    label: "Igor Jeziorski-Górecki",
-    path: `${semesterIndividualDir}/ijg.pdf`
-  },
-  {
-    label: "Kamil Konarzewski",
-    path: `${semesterIndividualDir}/kk.pdf`
-  },
-  {
     label: "Kacper Urbański",
     path: `${semesterIndividualDir}/ku.pdf`
-  },
-  {
-    label: "Paweł Charysz",
-    path: `${semesterIndividualDir}/pc.pdf`
   },
 ];
 
@@ -41,6 +17,7 @@ export default function Page() {
     <div className='grid place-content-center container mx-auto my-4'>
       <div className='flex justify-center max-w-4xl flex-col'>
         <section className='mt-10 my-6 prose prose-sm sm:prose-base md:prose-lg lg:max-w-4xl text-foreground'>
+          {/* TODO: Update this page with latest documentation */}
           <h1 className='text-3xl font-bold mb-6 border-b-2 pb-2 border-accent text-primary'>
             Informacja o dokumentacji
           </h1>
@@ -53,19 +30,8 @@ export default function Page() {
           </h2>
         </section>
 
-        {/* Main Report Download */}
+        {/* Main Report Download removed */}
         <section className='pl-4'>
-          <h3 className='text-xl font-semibold mb-4'>
-            Raport semestralny:
-          </h3>
-          <a
-            href={semesterMainReport.path}
-            target='_blank'
-            className='text-accent hover:underline block'
-          >
-            {semesterMainReport.label}
-          </a>
-
           {/* Individual Reports Downloads */}
           {semesterIndividualReports.length > 0 && (
             <div className='mt-6'>
