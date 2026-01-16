@@ -24,6 +24,9 @@ export default function Page() {
           <p className='mb-4 leading-relaxed'>
             Dokumentacja projektu zostanie opublikowana po zakończeniu prac nad projektem. Szczegóły techniczne i procesowe będą dostępne w finalnej wersji dokumentacji.
           </p>
+          <p className='mb-4 leading-relaxed italic text-muted-foreground'>
+            Niektóre materiały, takie jak "Zestawienie spotkań" oraz "Dokumentacja API w Postman", nie są obecnie dostępne, ponieważ aktualny etap prac nad projektem jest prowadzony jednoosobowo, a aplikacja backendowa została przepisana na Django REST Framework i korzysta z drf-spectacular.
+          </p>
 
           <h2 className='text-2xl font-semibold mt-8 mb-4 text-primary relative pl-3 before:absolute before:left-0 before:w-1 before:h-full before:bg-accent'>
             Raporty projektu
@@ -82,30 +85,7 @@ export default function Page() {
                 Specyfikacja funkcjonalna
               </Link>
             </li>
-            <li className='relative pl-6 before:absolute before:left-0 before:top-[0.3em] before:text-accent before:content-["▹"] before:mr-2 before:leading-none mt-2'>
-              <Link
-                href="/zesp11_zestawienie_spotkan.pdf"
-                target='_blank'
-                className='text-accent hover:underline'
-              >
-                Zestawienie spotkań
-              </Link>
-            </li>
           </ul>
-        </section>
-
-        {/* API Documentation */}
-        <section className='pl-4 mt-8'>
-          <h3 className='text-xl font-semibold mb-4'>
-            Dokumentacja API:
-          </h3>
-          <Link
-            href="https://documenter.getpostman.com/view/36993515/2sAYdhKqiV"
-            target='_blank'
-            className='text-accent hover:underline block'
-          >
-            Dokumentacja API w Postman
-          </Link>
         </section>
 
       </div>

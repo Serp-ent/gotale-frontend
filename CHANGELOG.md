@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.1
+
+- Updated the Documentation page layout and content.
+- Removed the deprecated "Zestawienie spotkań" PDF.
+
 ## 0.10.0
 
 - Integrated `leaflet` and `react-leaflet` for map functionality.
