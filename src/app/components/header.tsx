@@ -22,10 +22,8 @@ const links = [
   // { url: "/posty", label: "Posty" },
   { url: "/scenarios", label: "Scenariusze" },
   { url: "/creator", label: "Kreator" },
-  { url: "/harmonogram", label: "Harmonogram" },
-  { url: "/zespol", label: "Zespół" },
-  { url: "/opis", label: "Opis Projektu" },
-  { url: "/docs", label: "Dokumentacja" },
+    { url: "/harmonogram", label: "Harmonogram" },
+    { url: "/docs", label: "Docs" },
 ];
 
 export default function Header() {

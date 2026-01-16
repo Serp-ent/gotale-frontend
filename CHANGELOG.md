@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.0
+
+- Removed the Team ("Zespol") page and associated components.
+
 ## 0.10.2
 
 - Updated the project description and PDF.
