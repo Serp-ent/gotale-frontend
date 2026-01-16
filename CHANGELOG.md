@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.1
+
+- Reordered navigation tabs in the header.
+
 ## 0.9.0
 
 - Removed the Contact page and associated configurations.
