@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.0
+
+- Integrated `leaflet` and `react-leaflet` for map functionality.
+- Added `MapPicker` component for location selection in the Gamebook Creator.
+- Updated `StepNode` to support location data and map integration.
+- Added `@types/leaflet` for type safety.
+
 ## 0.9.1
 
 - Reordered navigation tabs in the header.

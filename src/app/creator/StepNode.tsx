@@ -1,11 +1,20 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { Handle, Position, NodeProps, Node } from '@xyflow/react';
-import { PlusCircle, AlertCircle, Trash2 } from 'lucide-react';
+import { PlusCircle, AlertCircle, Trash2, MapPin, MapPinned } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import dynamic from 'next/dynamic';
+import { LocationWrite } from '@/lib/api';
+
+// Dynamically import MapPicker to avoid SSR issues with Leaflet
+const MapPicker = dynamic(() => import('./MapPicker'), { 
+    ssr: false,
+    loading: () => <div className="h-[400px] w-full flex items-center justify-center bg-muted animate-pulse">Ładowanie mapy...</div>
+});
 
 export type StepNodeData = {
     title: string;
     description: string;
+    location?: LocationWrite | null;
     onChange: (id: string, data: Partial<StepNodeData>) => void;
     onAddChild?: (parentId: string) => void;
     onDelete?: (id: string) => void;
@@ -14,6 +23,7 @@ export type StepNodeData = {
 
 export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
     const [showErrors, setShowErrors] = useState(false);
+    const [isMapOpen, setIsMapOpen] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const hasErrors = data.errors && data.errors.length > 0;
 
@@ -51,6 +61,22 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
             data.onDelete(id);
         }
     }, [id, data]);
+
+    const handleLocationSelect = (lat: string, lng: string, title: string) => {
+        data.onChange(id, {
+            location: {
+                title: title || data.title || "Lokalizacja kroku",
+                description: data.description || "",
+                latitude: lat,
+                longitude: lng
+            }
+        });
+    };
+
+    const removeLocation = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        data.onChange(id, { location: null });
+    };
 
     return (
         <div className={cn(
@@ -115,6 +141,43 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
                 />
             </div>
 
+            {/* Location Section */}
+            <div className="px-4 pb-4">
+                {data.location ? (
+                    <div className="flex items-center justify-between bg-accent/10 rounded-lg p-2 border border-accent/20 group/loc transition-all hover:bg-accent/20">
+                        <button 
+                            onClick={() => setIsMapOpen(true)}
+                            className="flex items-center gap-2 text-xs font-medium text-accent hover:underline decoration-accent/30 underline-offset-4 w-full text-left"
+                        >
+                            <MapPinned size={14} className="shrink-0" />
+                            <div className="flex flex-col overflow-hidden">
+                                <span className="truncate font-bold text-foreground/80">
+                                    {data.location.title}
+                                </span>
+                                <span className="truncate text-[10px] text-muted-foreground">
+                                    {data.location.latitude}, {data.location.longitude}
+                                </span>
+                            </div>
+                        </button>
+                        <button 
+                            onClick={removeLocation}
+                            className="text-muted-foreground hover:text-destructive transition-colors p-1 shrink-0"
+                            title="Usuń lokalizację"
+                        >
+                            <Trash2 size={12} />
+                        </button>
+                    </div>
+                ) : (
+                    <button 
+                        onClick={() => setIsMapOpen(true)}
+                        className="w-full py-2 px-3 border-2 border-dashed border-border rounded-lg text-xs font-medium text-muted-foreground hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all flex items-center justify-center gap-2"
+                    >
+                        <MapPin size={14} />
+                        Dodaj lokalizację
+                    </button>
+                )}
+            </div>
+
             {/* Quick Add Button */}
             <button 
                 onClick={handleAddChild}
@@ -125,6 +188,18 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
             </button>
 
             <Handle type="source" position={Position.Bottom} className="!bg-accent w-3 h-3 border-2 border-background" />
+
+            {isMapOpen && (
+                <div className="nodrag">
+                    <MapPicker 
+                        initialLat={data.location?.latitude}
+                        initialLng={data.location?.longitude}
+                        initialTitle={data.location?.title}
+                        onSelect={handleLocationSelect}
+                        onClose={() => setIsMapOpen(false)}
+                    />
+                </div>
+            )}
         </div>
     );
 }

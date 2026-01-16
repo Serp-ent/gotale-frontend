@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: GoTale API
-  version: 0.14.2
+  version: 0.16.0
   description: API for zesp11 GoTale app.
 paths:
   /api/auth/register/:
@@ -791,12 +791,12 @@ components:
           type: string
           format: date-time
           readOnly: true
-          title: Created
+          title: Utworzono
         modified_at:
           type: string
           format: date-time
           readOnly: true
-          title: Modified
+          title: Zmodyfikowano
         created_by:
           $ref: '#/components/schemas/User'
         modified_by:
@@ -805,9 +805,11 @@ components:
           nullable: true
         title:
           type: string
+          title: Tytuł
           maxLength: 255
         description:
           type: string
+          title: Opis
         longitude:
           type: string
           format: decimal
@@ -830,9 +832,11 @@ components:
       properties:
         title:
           type: string
+          title: Tytuł
           maxLength: 255
         description:
           type: string
+          title: Opis
         longitude:
           type: string
           format: decimal
@@ -850,9 +854,33 @@ components:
       properties:
         title:
           type: string
+          title: Tytuł
           maxLength: 255
         description:
           type: string
+          title: Opis
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+      required:
+      - latitude
+      - longitude
+      - title
+    LocationWrite:
+      type: object
+      properties:
+        title:
+          type: string
+          title: Tytuł
+          maxLength: 255
+        description:
+          type: string
+          title: Opis
         longitude:
           type: string
           format: decimal
@@ -870,9 +898,11 @@ components:
       properties:
         title:
           type: string
+          title: Tytuł
           maxLength: 255
         description:
           type: string
+          title: Opis
         longitude:
           type: string
           format: decimal
@@ -895,8 +925,10 @@ components:
             $ref: '#/components/schemas/StepCreate'
         description:
           type: string
+          title: Opis
         title:
           type: string
+          title: Tytuł
           maxLength: 255
     PatchedUser:
       type: object
@@ -916,14 +948,16 @@ components:
           maxLength: 254
         first_name:
           type: string
+          title: Imię
           maxLength: 150
         last_name:
           type: string
+          title: Nazwisko
           maxLength: 150
         username:
           type: string
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-            only.
+          title: Nazwa użytkownika
+          description: Wymagana. 150 lub mniej znaków. Jedynie litery, cyfry i @/./+/-/_.
           pattern: ^[\w.@+-]+$
           maxLength: 150
     PatchedUserUpdate:
@@ -940,18 +974,21 @@ components:
           maxLength: 254
         first_name:
           type: string
+          title: Imię
           maxLength: 150
         password:
           type: string
           writeOnly: true
+          title: Hasło
           maxLength: 128
         last_name:
           type: string
+          title: Nazwisko
           maxLength: 150
         username:
           type: string
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-            only.
+          title: Nazwa użytkownika
+          description: Wymagana. 150 lub mniej znaków. Jedynie litery, cyfry i @/./+/-/_.
           pattern: ^[\w.@+-]+$
           maxLength: 150
     Scenario:
@@ -966,12 +1003,12 @@ components:
           type: string
           format: date-time
           readOnly: true
-          title: Created
+          title: Utworzono
         modified_at:
           type: string
           format: date-time
           readOnly: true
-          title: Modified
+          title: Zmodyfikowano
         created_by:
           $ref: '#/components/schemas/User'
         modified_by:
@@ -984,8 +1021,10 @@ components:
           nullable: true
         description:
           type: string
+          title: Opis
         title:
           type: string
+          title: Tytuł
           maxLength: 255
       required:
       - created_at
@@ -1007,14 +1046,17 @@ components:
           type: string
           format: uuid
           readOnly: true
+          title: Utworzone przez
         steps:
           type: array
           items:
             $ref: '#/components/schemas/StepCreate'
         description:
           type: string
+          title: Opis
         title:
           type: string
+          title: Tytuł
           maxLength: 255
       required:
       - created_by
@@ -1035,8 +1077,10 @@ components:
             $ref: '#/components/schemas/StepCreate'
         description:
           type: string
+          title: Opis
         title:
           type: string
+          title: Tytuł
           maxLength: 255
       required:
       - id
@@ -1049,14 +1093,15 @@ components:
           readOnly: true
         title:
           type: string
+          title: Tytuł
           maxLength: 255
         description:
           type: string
+          title: Opis
         location:
-          type: string
-          format: uuid
+          allOf:
+          - $ref: '#/components/schemas/Location'
           nullable: true
-          description: Location where this decision is made
         choices:
           type: array
           items:
@@ -1065,6 +1110,7 @@ components:
       required:
       - choices
       - id
+      - location
       - title
     StepCreate:
       type: object
@@ -1074,14 +1120,15 @@ components:
           format: uuid
         title:
           type: string
+          title: Tytuł
           maxLength: 255
         description:
           type: string
+          title: Opis
         location:
-          type: string
-          format: uuid
+          allOf:
+          - $ref: '#/components/schemas/LocationWrite'
           nullable: true
-          description: Location where this decision is made
         choices:
           type: array
           items:
@@ -1139,14 +1186,16 @@ components:
           maxLength: 254
         first_name:
           type: string
+          title: Imię
           maxLength: 150
         last_name:
           type: string
+          title: Nazwisko
           maxLength: 150
         username:
           type: string
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-            only.
+          title: Nazwa użytkownika
+          description: Wymagana. 150 lub mniej znaków. Jedynie litery, cyfry i @/./+/-/_.
           pattern: ^[\w.@+-]+$
           maxLength: 150
       required:
@@ -1163,17 +1212,20 @@ components:
           maxLength: 254
         first_name:
           type: string
+          title: Imię
           maxLength: 150
         password:
           type: string
+          title: Hasło
           maxLength: 128
         last_name:
           type: string
+          title: Nazwisko
           maxLength: 150
         username:
           type: string
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-            only.
+          title: Nazwa użytkownika
+          description: Wymagana. 150 lub mniej znaków. Jedynie litery, cyfry i @/./+/-/_.
           pattern: ^[\w.@+-]+$
           maxLength: 150
       required:
@@ -1194,18 +1246,21 @@ components:
           maxLength: 254
         first_name:
           type: string
+          title: Imię
           maxLength: 150
         password:
           type: string
           writeOnly: true
+          title: Hasło
           maxLength: 128
         last_name:
           type: string
+          title: Nazwisko
           maxLength: 150
         username:
           type: string
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-            only.
+          title: Nazwa użytkownika
+          description: Wymagana. 150 lub mniej znaków. Jedynie litery, cyfry i @/./+/-/_.
           pattern: ^[\w.@+-]+$
           maxLength: 150
       required:

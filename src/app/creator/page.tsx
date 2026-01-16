@@ -10,11 +10,11 @@ import {
   addEdge,
   Connection,
   Edge,
-  Node,
   ReactFlowProvider,
   BackgroundVariant,
   Panel,
   useReactFlow,
+  DefaultEdgeOptions,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { v4 as uuidv4 } from 'uuid';
@@ -77,6 +77,30 @@ const scenariosApi = new ScenariosApi(apiConfig, undefined, axiosInstance);
 
 const nodeTypes = {
   step: StepNode,
+};
+
+const defaultEdgeOptions: DefaultEdgeOptions = {
+  type: 'smoothstep',
+  animated: true,
+  style: { 
+      strokeWidth: 2,
+      stroke: 'hsl(var(--muted-foreground))',
+  },
+  labelBgStyle: { 
+      fill: 'hsl(var(--card))', 
+      stroke: 'hsl(var(--border))',
+      strokeWidth: 1,
+      rx: 4, 
+      ry: 4 
+  },
+  labelBgPadding: [8, 4] as [number, number],
+  labelBgBorderRadius: 4,
+  labelStyle: { 
+      fill: 'hsl(var(--foreground))', 
+      fontWeight: 600, 
+      fontSize: 12,
+      fontFamily: 'var(--font-sans)'
+  },
 };
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -194,7 +218,7 @@ function CreatorFlow() {
             });
             return;
         }
-        setEdges((eds) => addEdge({ ...params, type: 'default', label: 'Dalej' }, eds));
+        setEdges((eds) => addEdge({ ...params, label: 'Dalej' }, eds));
     },
     [setEdges, getEdges],
   );
@@ -299,7 +323,7 @@ function CreatorFlow() {
             title: node.data.title,
             description: node.data.description,
             choices: choices,
-            location: null 
+            location: node.data.location || null
         };
       });
 
@@ -389,6 +413,7 @@ function CreatorFlow() {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        defaultEdgeOptions={defaultEdgeOptions}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
