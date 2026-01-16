@@ -25,7 +25,6 @@ const links = [
   { url: "/zespol", label: "Zespół" },
   { url: "/opis", label: "Opis Projektu" },
   { url: "/docs", label: "Dokumentacja" },
-  { url: "/kontakt", label: "Kontakt" },
   { url: "/creator", label: "Kreator" },
 ];
 

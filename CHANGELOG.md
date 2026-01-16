@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0
+
+- Removed the Contact page and associated configurations.
+
 ## 0.8.0
 
 - Redesigned and improved the Front Page with better layout and visuals.
