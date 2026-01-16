@@ -76,14 +76,17 @@ export default function Page() {
                 Opis projektu
               </Link>
             </li>
-            <li className='relative pl-6 before:absolute before:left-0 before:top-[0.3em] before:text-accent before:content-["▹"] before:mr-2 before:leading-none mt-2'>
+            <li className='relative pl-6 before:absolute before:left-0 before:top-[0.3em] before:text-muted-foreground before:content-["▹"] before:mr-2 before:leading-none mt-2'>
               <Link
                 href="/zesp11_specyfikacja_funkcjonalna.pdf"
                 target='_blank'
-                className='text-accent hover:underline'
+                className='text-muted-foreground hover:underline'
               >
                 Specyfikacja funkcjonalna
               </Link>
+              <span className='ml-2 text-sm text-muted-foreground italic'>
+                (nieaktualne — część starego projektu programowania zespołowego)
+              </span>
             </li>
           </ul>
         </section>

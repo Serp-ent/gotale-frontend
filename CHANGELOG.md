@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.2
+
+- Updated the project description and PDF.
+- Minor updates to the Documentation page.
+
 ## 0.10.1
 
 - Updated the Documentation page layout and content.

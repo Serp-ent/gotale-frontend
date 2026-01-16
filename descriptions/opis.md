@@ -1,12 +1,10 @@
 # Opis Projektu
 
-# TODO: aktualizacja opisu
-
 ## Wstęp
 
 Projekt **GoTale** to innowacyjne rozwiązanie, które łączy miłośników przygód i gier miejskich w jednym interaktywnym systemie. Naszym celem jest stworzenie aplikacji umożliwiającej graczom odkrywanie świata poprzez wspólne tworzenie i przeżywanie interaktywnych książek przygodowych (gamebooków). Gracze mogą tworzyć zespoły, podejmować decyzje w grze, a ich działania będą wymagały fizycznego przemieszczania się po mieście przy użyciu GPS.
 
-Projekt opiera się na nowoczesnych technologiach, takich jak **Next.js** do budowy aplikacji webowej (Kreator gier paragrafowych), **Spring Boot** wraz z **Javą** jako fundament backendu oraz **Flutter** do tworzenia aplikacji mobilnej. Dzięki współpracy członków zespołu, wszystkie elementy systemu są spójnie zintegrowane, zapewniając graczom wyjątkowe doświadczenia.
+Projekt opiera się na nowoczesnych technologiach, takich jak **Next.js** do budowy aplikacji webowej (Kreator gier paragrafowych), **Django REST Framework** (Python) jako fundament backendu oraz **Flutter** do tworzenia aplikacji mobilnej. Dzięki współpracy członków zespołu, wszystkie elementy systemu są spójnie zintegrowane, zapewniając graczom wyjątkowe doświadczenia.
 
 ## Cel
 
@@ -25,15 +23,17 @@ Kreator Gier umożliwia tworzenie i edytowanie interaktywnych historii, określa
 
 ## Architektura
 
-Projekt składa się z trzech głównych komponentów:
+Projekt opiera się na architekturze typu **API-first**. Dzięki wykorzystaniu standardu **OpenAPI 3.0**, komunikacja między komponentami jest spójna i zautomatyzowana.
 
 ### 1. Aplikacja Mobilna
 
 - umożliwia zespołom na uczestniczenie w rozgrywkach w oparciu o stworzone wcześniej gry paragrafowe.
-- **Technologia**: Flutter
+- **Technologia**: Flutter + Wygenerowany klient API
 
   **Główne funkcje**:
 
+  - **Zautomatyzowana integracja z API**
+    Wykorzystanie generatorów kodu do tworzenia klienta API na podstawie schematu OpenAPI, co zapewnia pełną zgodność z backendem.
   - Dynamiczne podejmowanie decyzji w grze i ich wpływ na przebieg historii
   - Lokalizacja członku zespołu na mapie za pomocą GPS
   - Przeżywanie interaktywnych przygód w czasie rzeczywistym
@@ -43,10 +43,12 @@ Projekt składa się z trzech głównych komponentów:
 ### 2. Aplikacja webowa (Kreator Gier Paragrafowych)
 
 - Narzędzie umożliwiające użytkownikom tworzenie własnych interaktywnych książek przygodowych, które później można eksplorować za pomocą aplikacji mobilnej.
-- **Technologia**: React z Next.js
+- **Technologia**: React z Next.js + Wygenerowany klient API
 
   **Główne funkcje**:
 
+  - **Integracja z API oparta na schemacie**
+    Klient API jest generowany automatycznie, co minimalizuje błędy komunikacji i przyspiesza rozwój nowych funkcji.
   - **Tworzenie i edycja gamebooków**  
     Narratorzy mogą projektować nieliniowe historie, w których każda decyzja graczy prowadzi do różnych rezultatów. (Wymagane zalogowanie).
   - **Personalizacja historii**  
@@ -55,16 +57,16 @@ Projekt składa się z trzech głównych komponentów:
     Twórcy opowieści mogą przypisywać zadania lub wydarzenia do konkretnych miejsc w mieście, które gracze muszą odwiedzić.
   - **Prosty i intuicyjny interfejs**  
     Przyjazny dla twórców o różnym poziomie doświadczenia.
-  - **Integracja z backendem**  
-    W pełni zsynchronizowana z API backendu, co umożliwia zapis i edycję historii w czasie rzeczywistym.
 
 ### 3. Backend
 
 - trzon systemu, zarządzając danymi i logiką gry oraz zapewniając płynną integrację między aplikacjami mobilnymi i webowymi.
-- **Technologia**: Java + Spring Boot + PostgreSQL
+- **Technologia**: Python + Django REST Framework + PostgreSQL + drf-spectacular
 
   **Główne funkcje**:
 
+  - **Automatyczna dokumentacja i schemat API**
+    Wykorzystanie biblioteki **drf-spectacular** do generowania dynamicznej dokumentacji oraz schematu OpenAPI 3.0, który służy jako „jedna tablica prawdy” (*single source of truth*) dla całego systemu.
   - Obsługa API REST do zarządzania danymi książek przygodowych
   - Obsługa WebSocketów do zarządzania trybem dla wielu graczy
   - Bezpieczne uwierzytelnianie użytkowników przy użyciu JWT

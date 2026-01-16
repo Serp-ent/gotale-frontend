@@ -2,7 +2,7 @@
   "homepage": "https://serp-ent.github.io/zesp11_page",
   "name": "gotale_frontend",
   "description": "GoTale is an interactive platform that combines urban exploration and adventure storytelling through gamebooks.",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
