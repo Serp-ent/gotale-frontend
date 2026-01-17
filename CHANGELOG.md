@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.1
+
+- Fixed build errors in scenario and user pages.
+- Removed `output: 'export'` from `next.config.ts`, moving away from static export.
+
 ## 0.11.0
 
 - Removed the Team ("Zespol") page and associated components.

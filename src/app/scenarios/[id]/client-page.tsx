@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { ScenariosApi, Configuration, Scenario } from '@/lib/api';
-import { axiosInstance } from '@/app/components/auth-provider';
+import { axiosInstance, useAuth } from '@/app/components/auth-provider';
 import { Loader2, User, Calendar, Clock, PlayCircle } from "lucide-react";
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -12,19 +12,26 @@ import { Button } from '@/components/ui/button';
 export default function ScenarioDetailPage() {
   const params = useParams();
   const id = params?.id as string;
+  const { token } = useAuth();
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchScenario = async () => {
       if (!id) return;
       try {
-        const apiConfig = new Configuration({ basePath: 'http://localhost:8000' });
+        const apiConfig = new Configuration({ 
+            basePath: 'http://localhost:8000',
+            accessToken: token || undefined
+        });
         const scenariosApi = new ScenariosApi(apiConfig, undefined, axiosInstance);
         const response = await scenariosApi.scenariosRetrieve(id);
         setScenario(response.data);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to fetch scenario", error);
+        const errorMsg = error.response?.data?.detail || error.message || "Unknown error";
+        setError(errorMsg);
         toast.error("Nie udało się pobrać szczegółów scenariusza.");
       } finally {
         setIsLoading(false);
@@ -32,7 +39,7 @@ export default function ScenarioDetailPage() {
     };
 
     fetchScenario();
-  }, [id]);
+  }, [id, token]);
 
   if (isLoading) {
     return (
@@ -46,6 +53,13 @@ export default function ScenarioDetailPage() {
     return (
       <div className="container mx-auto mt-20 p-4 text-center">
         <h1 className="text-2xl font-bold mb-4">Scenariusz nie istnieje</h1>
+        {error && (
+            <div className="max-w-md mx-auto mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-md text-left">
+                <p className="font-bold text-destructive text-sm">Błąd debugowania:</p>
+                <p className="text-xs font-mono text-muted-foreground break-all">ID: {id}</p>
+                <p className="text-xs font-mono text-destructive mt-1">{error}</p>
+            </div>
+        )}
         <Link href="/scenarios" className="text-accent hover:underline">Wróć do listy</Link>
       </div>
     );

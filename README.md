@@ -7,7 +7,7 @@ Aplikacja służy do tworzenia interaktywnych gier paragrafowych.
 
 ## Przegląd projektu
 
-Strona projektu jest stworzona w **Next.js 16** z użyciem **TypeScript**, **React 19** oraz **Tailwind CSS 4**. Jest generowana statycznie, zawierająca opis projektu oraz harmonogram w plikach **Markdown**.
+Strona projektu jest stworzona w **Next.js 16** z użyciem **TypeScript**, **React 19** oraz **Tailwind CSS 4**.
 
 ## Technologie
 
