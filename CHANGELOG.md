@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.12.0
+
+- Added `Dockerfile` for containerization.
+- Updated `next.config.ts` to support standalone output for Docker.
+
 ## 0.11.1
 
 - Fixed build errors in scenario and user pages.

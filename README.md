@@ -44,9 +44,9 @@ npm install
 npm run dev
 ```
 
-## Deploy aplikacji
+## Uruchomienie za pomocą Docker
 
 ```bash
-npm run build
-npm run deploy
+docker build -t gotale_frontend .
+docker run -p 3000:3000 gotale_frontend
 ```

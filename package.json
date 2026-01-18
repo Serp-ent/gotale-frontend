@@ -2,14 +2,13 @@
   "homepage": "https://serp-ent.github.io/zesp11_page",
   "name": "gotale_frontend",
   "description": "GoTale is an interactive platform that combines urban exploration and adventure storytelling through gamebooks.",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build && mkdir out/public && cp -r public out",
     "start": "next start",
-    "lint": "next lint",
-    "deploy": "echo > out/.nojekyll && gh-pages -d out"
+    "lint": "next lint"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -54,7 +53,6 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.1",
-    "gh-pages": "^6.3.0",
     "postcss": "^8.5.6",
     "prettier": "^3.7.4",
     "tailwindcss": "^4.1.18",
