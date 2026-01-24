@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: GoTale API
-  version: 0.17.1
+  version: 0.18.1
   description: API for zesp11 GoTale app.
 paths:
   /api/auth/register/:
@@ -150,6 +150,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Game'
+          description: ''
+  /api/games/{id}/history/:
+    get:
+      operationId: games_history_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this game.
+        required: true
+      tags:
+      - games
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameHistory'
           description: ''
   /api/games/{id}/step/:
     get:
@@ -779,6 +802,46 @@ components:
           format: uuid
       required:
       - scenario
+    GameHistory:
+      type: object
+      description: Base serializer for all models.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Utworzono
+        modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Zmodyfikowano
+        created_by:
+          $ref: '#/components/schemas/User'
+        modified_by:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          nullable: true
+        choice:
+          $ref: '#/components/schemas/Choice'
+        step:
+          $ref: '#/components/schemas/Step'
+        game:
+          type: string
+          format: uuid
+      required:
+      - choice
+      - created_at
+      - created_by
+      - game
+      - id
+      - modified_at
+      - modified_by
+      - step
     Location:
       type: object
       description: Base serializer for all models.

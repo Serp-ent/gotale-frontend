@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.1
+
+- Updated `backend-schema.yml` to version 0.18.1, adding `GameHistory` support.
+- Improved `scripts/get-schema.sh` to support configurable `SERVER_ADDRESS`.
+- Cleaned up output in `scripts/generate-api.sh`.
+
 ## 0.12.0
 
 - Added `Dockerfile` for containerization.
