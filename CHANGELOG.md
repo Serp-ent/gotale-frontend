@@ -2,7 +2,9 @@
 
 ## 0.13.0
 
-- Added the ability to delete connections (edges) between steps in the Gamebook Creator.
+- Improved Gamebook Creator with split connections for better visibility of parallel paths.
+- Added edge deletion and color-coded connections based on output index.
+- Enforced character limits and input validation for titles and choice text.
 
 ## 0.12.3
 

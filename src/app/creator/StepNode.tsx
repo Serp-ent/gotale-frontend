@@ -40,12 +40,16 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
     }, [data.description, adjustHeight]);
 
     const handleTitleChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
-        data.onChange(id, { title: evt.target.value });
+        data.onChange(id, { title: evt.target.value.replace(/\n/g, '') });
     }, [id, data]);
 
     const handleDescChange = useCallback((evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-        data.onChange(id, { description: evt.target.value });
-        adjustHeight();
+        const newValue = evt.target.value;
+        const newlineCount = (newValue.match(/\n/g) || []).length;
+        if (newlineCount <= 10) {
+            data.onChange(id, { description: newValue });
+            adjustHeight();
+        }
     }, [id, data, adjustHeight]);
 
     const handleAddChild = useCallback((evt: React.MouseEvent) => {
@@ -80,12 +84,16 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
 
     return (
         <div className={cn(
-            "group relative bg-white dark:bg-zinc-900 text-card-foreground rounded-xl border-2 shadow-md dark:shadow-slate-900/50 min-w-[300px] transition-all duration-200",
+            "group relative bg-white dark:bg-zinc-900 text-card-foreground rounded-xl border-2 shadow-md dark:shadow-slate-900/50 min-w-[400px] transition-all duration-200",
             hasErrors 
                 ? "border-red-500 shadow-red-500/20" 
                 : "border-slate-200 dark:border-slate-700 hover:border-accent/50 focus-within:border-accent"
         )}>
-             <Handle type="target" position={Position.Top} className="!bg-accent w-3 h-3 border-2 border-background" />
+             {/* Multiple Target Handles - Distributed Wider */}
+             <Handle type="target" id="target-0" position={Position.Top} className="!bg-accent w-2.5 h-2.5 border-2 border-background" style={{ left: '10%' }} />
+             <Handle type="target" id="target-1" position={Position.Top} className="!bg-accent w-2.5 h-2.5 border-2 border-background" style={{ left: '36.6%' }} />
+             <Handle type="target" id="target-2" position={Position.Top} className="!bg-accent w-2.5 h-2.5 border-2 border-background" style={{ left: '63.3%' }} />
+             <Handle type="target" id="target-3" position={Position.Top} className="!bg-accent w-2.5 h-2.5 border-2 border-background" style={{ left: '90%' }} />
             
             {/* Delete Button */}
             <button
@@ -126,6 +134,7 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
                 <input 
                     value={data.title} 
                     onChange={handleTitleChange} 
+                    maxLength={255}
                     placeholder="Tytuł kroku" 
                     className="nodrag flex h-9 w-full rounded-md bg-transparent px-3 py-1 text-lg font-bold shadow-none transition-colors placeholder:text-muted-foreground/50 focus-visible:outline-none focus-visible:ring-0"
                 />
@@ -187,7 +196,11 @@ export default function StepNode({ id, data }: NodeProps<Node<StepNodeData>>) {
                 <PlusCircle size={20} />
             </button>
 
-            <Handle type="source" position={Position.Bottom} className="!bg-accent w-3 h-3 border-2 border-background" />
+            {/* Multiple Source Handles - Distributed Wider */}
+            <Handle type="source" id="handle-0" position={Position.Bottom} className="!bg-accent w-2.5 h-2.5 border-2 border-background" style={{ left: '10%' }} />
+            <Handle type="source" id="handle-1" position={Position.Bottom} className="!bg-accent w-2.5 h-2.5 border-2 border-background" style={{ left: '36.6%' }} />
+            <Handle type="source" id="handle-2" position={Position.Bottom} className="!bg-accent w-2.5 h-2.5 border-2 border-background" style={{ left: '63.3%' }} />
+            <Handle type="source" id="handle-3" position={Position.Bottom} className="!bg-accent w-2.5 h-2.5 border-2 border-background" style={{ left: '90%' }} />
 
             {isMapOpen && (
                 <div className="nodrag">

@@ -85,7 +85,6 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
   animated: true,
   style: { 
       strokeWidth: 2,
-      stroke: 'hsl(var(--muted-foreground))',
   },
   labelBgStyle: { 
       fill: 'hsl(var(--card))', 
@@ -107,8 +106,22 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-const nodeWidth = 320;
+const nodeWidth = 400;
 const nodeHeight = 250;
+const rankSep = 200; 
+const nodeSep = 150;
+
+// Vibrant colors for edges to make them distinguishable
+const EDGE_COLORS = [
+    '#F59E0B', // Amber
+    '#EC4899', // Pink
+    '#8B5CF6', // Violet
+    '#10B981', // Emerald
+    '#3B82F6', // Blue
+    '#EF4444', // Red
+    '#06B6D4', // Cyan
+    '#84CC16', // Lime
+];
 
 function CreatorFlow() {
   const { setNodes: rfSetNodes, setEdges: rfSetEdges, getNodes, getEdges } = useReactFlow();
@@ -155,6 +168,18 @@ function CreatorFlow() {
           return;
       }
 
+      // Find first available handle
+      const usedHandles = outgoingEdges.map(e => e.sourceHandle);
+      let handleId = 'handle-0';
+      for (let i = 0; i < 4; i++) {
+          if (!usedHandles.includes(`handle-${i}`)) {
+              handleId = `handle-${i}`;
+              break;
+          }
+      }
+      
+      const handleIndex = parseInt(handleId.split('-')[1]);
+
       const newId = uuidv4();
       const newNode: Node<StepNodeData> = {
           id: newId,
@@ -177,11 +202,14 @@ function CreatorFlow() {
       rfSetEdges((eds) => addEdge({ 
           id: `e${parentId}-${newId}`, 
           source: parentNode.id, 
+          sourceHandle: handleId,
           target: newId, 
-          label: 'Dalej' 
+          targetHandle: `target-${handleIndex}`,
+          label: 'Dalej',
+          style: { stroke: EDGE_COLORS[handleIndex % EDGE_COLORS.length], strokeWidth: 2 }
       }, eds));
 
-  }, [rfSetNodes, rfSetEdges, getNodes, getEdges, onNodeChangeData]); // onDeleteStep added to deps below
+  }, [rfSetNodes, rfSetEdges, getNodes, getEdges, onNodeChangeData]);
 
   // Delete step handler
   const onDeleteStep = useCallback((id: string) => {
@@ -219,7 +247,31 @@ function CreatorFlow() {
             });
             return;
         }
-        setEdges((eds) => addEdge({ ...params, label: 'Dalej' }, eds));
+
+        // Prevent multiple connections from the same handle
+        if (outgoingEdges.some(e => e.sourceHandle === params.sourceHandle)) {
+            toast.error("To wyjście jest już zajęte", {
+                description: "Każdy punkt wyjścia może mieć tylko jedno połączenie."
+            });
+            return;
+        }
+
+        // Prevent multiple connections to the same target handle
+        const incomingEdges = edges.filter(e => e.target === params.target && e.targetHandle === params.targetHandle);
+        if (incomingEdges.length > 0) {
+            toast.error("To wejście jest już zajęte", {
+                description: "Każdy punkt wejścia może przyjąć tylko jedno połączenie."
+            });
+            return;
+        }
+
+        const handleIndex = params.sourceHandle ? parseInt(params.sourceHandle.split('-')[1]) : 0;
+
+        setEdges((eds) => addEdge({ 
+            ...params, 
+            label: 'Dalej',
+            style: { stroke: EDGE_COLORS[handleIndex % EDGE_COLORS.length], strokeWidth: 2 }
+        }, eds));
     },
     [setEdges, getEdges],
   );
@@ -258,7 +310,11 @@ function CreatorFlow() {
     const nodes = getNodes();
     const edges = getEdges();
 
-    dagreGraph.setGraph({ rankdir: 'TB' });
+    dagreGraph.setGraph({ 
+        rankdir: 'TB', 
+        nodesep: nodeSep,
+        ranksep: rankSep 
+    });
 
     nodes.forEach((node) => {
       dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
@@ -463,11 +519,20 @@ function CreatorFlow() {
                     </div>
                     
                     <div className="space-y-1">
-                        <label className="text-xs font-semibold text-muted-foreground uppercase">Tekst na połączeniu</label>
+                        <div className="flex justify-between items-end">
+                            <label className="text-xs font-semibold text-muted-foreground uppercase">Tekst na połączeniu</label>
+                            <span className={cn(
+                                "text-[10px] font-mono",
+                                editingEdgeLabel.length >= 50 ? "text-destructive font-bold" : "text-muted-foreground"
+                            )}>
+                                {editingEdgeLabel.length}/50
+                            </span>
+                        </div>
                         <input 
                             className="w-full p-2 rounded-md border bg-background focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all" 
                             value={editingEdgeLabel}
-                            onChange={e => setEditingEdgeLabel(e.target.value)}
+                            onChange={e => setEditingEdgeLabel(e.target.value.replace(/\n/g, ''))}
+                            maxLength={50}
                             placeholder="Wpisz tekst lub zostaw puste aby usunąć"
                             autoFocus
                             onKeyDown={e => {
@@ -519,7 +584,8 @@ function CreatorFlow() {
                                 <input 
                                     className="w-full p-2 rounded-md border bg-background/50 focus:bg-background transition-colors focus:ring-1 focus:ring-accent focus:border-accent outline-none font-medium" 
                                     value={scenarioTitle} 
-                                    onChange={e => setScenarioTitle(e.target.value)} 
+                                    onChange={e => setScenarioTitle(e.target.value.replace(/\n/g, ''))} 
+                                    maxLength={255}
                                     placeholder="Epicka przygoda..."
                                 />
                             </div>
