@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.2
+
+- Fixed API client generation path in `scripts/generate-api.sh` (changed from `src/lib/api_client` to `src/lib/api`).
+
 ## 0.12.1
 
 - Updated `backend-schema.yml` to version 0.18.1, adding `GameHistory` support.

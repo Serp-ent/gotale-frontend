@@ -11,15 +11,15 @@ if [ ! -f "backend-schema.yml" ]; then
 fi
 
 # Clean and generate
-rm -rf src/lib/api_client
-mkdir -p src/lib/api_client
+rm -rf src/lib/api
+mkdir -p src/lib/api
 
 echo "Generating TypeScript client..."
 npx @openapitools/openapi-generator-cli generate \
     -i backend-schema.yml \
     -g typescript-axios \
-    -o src/lib/api_client \
+    -o src/lib/api \
     -c scripts/openapi-config.json
 
-echo "Done! Client generated in src/lib/api_client"
+echo "Done! Client generated in src/lib/api"
 
