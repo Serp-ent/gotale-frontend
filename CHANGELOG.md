@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.12.3
+
+- Redesigned Login/Registration modal with enhanced error feedback and dark mode optimizations.
+- Refactored authentication components for better maintainability and state consistency.
+
 ## 0.12.2
 
 - Fixed API client generation path in `scripts/generate-api.sh` (changed from `src/lib/api_client` to `src/lib/api`).

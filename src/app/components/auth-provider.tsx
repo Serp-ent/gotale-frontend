@@ -106,7 +106,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // fetchUser will be triggered by token change
     } catch (error) {
       console.error('Login failed:', error);
-      toast.error("Błąd logowania. Sprawdź dane.");
       throw error;
     }
   };
@@ -119,7 +118,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // For now, assume register just creates account.
     } catch (error) {
       console.error('Registration failed:', error);
-      toast.error("Błąd rejestracji.");
       throw error;
     }
   };
