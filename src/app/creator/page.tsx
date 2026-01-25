@@ -23,7 +23,7 @@ import StepNode, { StepNodeData } from './StepNode';
 import { Button } from '@/components/ui/button';
 import { ScenariosApi, Configuration, StepCreate, ChoiceCreate } from '@/lib/api';
 import { axiosInstance, useAuth } from '@/app/components/auth-provider';
-import { Plus, Save, MousePointerClick, ChevronRight, Settings2, LayoutDashboard, X, Check, Edit3 } from 'lucide-react';
+import { Plus, Save, MousePointerClick, ChevronRight, Settings2, LayoutDashboard, X, Check, Edit3, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import dagre from 'dagre';
 import { toast } from 'sonner';
@@ -232,15 +232,27 @@ function CreatorFlow() {
 
   const saveEdgeLabel = useCallback(() => {
       if (editingEdgeId) {
-          setEdges((eds) => eds.map((e) => {
-              if (e.id === editingEdgeId) {
-                  return { ...e, label: editingEdgeLabel || "Dalej" };
-              }
-              return e;
-          }));
+          if (!editingEdgeLabel || editingEdgeLabel.trim() === "") {
+             // If label is empty, delete the edge
+             setEdges((eds) => eds.filter((e) => e.id !== editingEdgeId));
+          } else {
+             setEdges((eds) => eds.map((e) => {
+                if (e.id === editingEdgeId) {
+                    return { ...e, label: editingEdgeLabel };
+                }
+                return e;
+             }));
+          }
           setEditingEdgeId(null);
       }
   }, [editingEdgeId, editingEdgeLabel, setEdges]);
+
+  const deleteEdge = useCallback(() => {
+      if (editingEdgeId) {
+          setEdges((eds) => eds.filter((e) => e.id !== editingEdgeId));
+          setEditingEdgeId(null);
+      }
+  }, [editingEdgeId, setEdges]);
 
   const onLayout = useCallback(() => {
     const nodes = getNodes();
@@ -434,9 +446,20 @@ function CreatorFlow() {
                     className="bg-card text-card-foreground p-6 rounded-xl shadow-2xl border border-border w-96 animate-in zoom-in-95 duration-200 flex flex-col gap-4"
                     onClick={e => e.stopPropagation()} // Prevent closing when clicking inside
                 >
-                    <div className="flex items-center gap-2 text-accent">
-                        <Edit3 size={20} />
-                        <h3 className="font-bold text-lg">Edytuj wybór</h3>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-accent">
+                            <Edit3 size={20} />
+                            <h3 className="font-bold text-lg">Edytuj wybór</h3>
+                        </div>
+                        <Button
+                            variant="destructive"
+                            size="icon"
+                            onClick={deleteEdge}
+                            className="bg-red-500 hover:bg-red-600 text-white -mr-2"
+                            title="Usuń połączenie"
+                        >
+                            <Trash2 size={18} />
+                        </Button>
                     </div>
                     
                     <div className="space-y-1">
@@ -445,7 +468,7 @@ function CreatorFlow() {
                             className="w-full p-2 rounded-md border bg-background focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all" 
                             value={editingEdgeLabel}
                             onChange={e => setEditingEdgeLabel(e.target.value)}
-                            placeholder="np. 'Otwórz drzwi'"
+                            placeholder="Wpisz tekst lub zostaw puste aby usunąć"
                             autoFocus
                             onKeyDown={e => {
                                 if (e.key === 'Enter') saveEdgeLabel();
@@ -455,7 +478,7 @@ function CreatorFlow() {
                     </div>
 
                     <div className="flex justify-end gap-2 pt-2">
-                        <Button variant="outline" onClick={() => setEditingEdgeId(null)} className="hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50">
+                        <Button variant="outline" onClick={() => setEditingEdgeId(null)} className="hover:bg-muted">
                             <X size={16} className="mr-1"/> Anuluj
                         </Button>
                         <Button onClick={saveEdgeLabel} className="bg-accent hover:bg-accent/90 text-white">

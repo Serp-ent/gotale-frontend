@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13.0
+
+- Added the ability to delete connections (edges) between steps in the Gamebook Creator.
+
 ## 0.12.3
 
 - Redesigned Login/Registration modal with enhanced error feedback and dark mode optimizations.
