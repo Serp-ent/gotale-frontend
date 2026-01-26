@@ -3,6 +3,8 @@
 ## 0.14.1
 
 - Fixed a bug in the Gamebook Creator where clicking the "Quick Add" button (plus icon) created multiple duplicate nodes instead of one.
+- Fixed TypeScript build errors related to missing `steps` property in `Scenario` type.
+- Fixed build script by removing legacy static export commands.
 
 ## 0.14.0
 

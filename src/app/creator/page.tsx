@@ -236,7 +236,7 @@ function CreatorFlow() {
           const loadScenario = async () => {
               try {
                   const response = await scenariosApi.scenariosFullRetrieve(editId);
-                  const scenario = response.data;
+                  const scenario = response.data as any;
                   setIsEditing(true);
                   setScenarioTitle(scenario.title);
                   setScenarioDesc(scenario.description || "");
