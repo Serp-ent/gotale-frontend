@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.1
+
+- Fixed a bug in the Gamebook Creator where clicking the "Quick Add" button (plus icon) created multiple duplicate nodes instead of one.
+
 ## 0.14.0
 
 - Updated Scenario Details page (`/scenarios/[id]`) to use `scenariosFullRetrieve` and provide an "Edit in Creator" button.

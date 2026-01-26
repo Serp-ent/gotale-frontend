@@ -129,6 +129,8 @@ function CreatorFlow() {
   const [editingEdgeId, setEditingEdgeId] = useState<string | null>(null);
   const [editingEdgeLabel, setEditingEdgeLabel] = useState("");
 
+  const { getNodes, getEdges } = useReactFlow();
+
   const onNodeChangeData = useCallback((id: string, newData: Partial<StepNodeData>) => {
       setNodes((nds) =>
         nds.map((node) => {
@@ -149,56 +151,52 @@ function CreatorFlow() {
   }, []);
 
   const onAddChild = useCallback((parentId: string) => {
-      setNodes((nds) => {
-          const parentNode = nds.find(n => n.id === parentId);
-          if (!parentNode) return nds;
+      const nodes = getNodes();
+      const edges = getEdges();
+      const parentNode = nodes.find(n => n.id === parentId);
+      if (!parentNode) return;
 
-          setEdges((eds) => {
-              const outgoingEdges = eds.filter(e => e.source === parentId);
-              if (outgoingEdges.length >= 4) {
-                  toast.error("Osiągnięto limit wyjść");
-                  return eds;
-              }
+      const outgoingEdges = edges.filter(e => e.source === parentId);
+      if (outgoingEdges.length >= 4) {
+          toast.error("Osiągnięto limit wyjść");
+          return;
+      }
 
-              const usedHandles = outgoingEdges.map(e => e.sourceHandle);
-              let handleId = 'handle-0';
-              for (let i = 0; i < 4; i++) {
-                  if (!usedHandles.includes(`handle-${i}`)) {
-                      handleId = `handle-${i}`;
-                      break;
-                  }
-              }
-              const handleIndex = parseInt(handleId.split('-')[1]);
-              const newId = uuidv4();
-              
-              const newNode: Node<StepNodeData> = {
-                  id: newId,
-                  type: 'step',
-                  position: { x: parentNode.position.x, y: parentNode.position.y + 250 },
-                  data: {
-                      title: 'Nowa Opcja',
-                      description: '',
-                      onChange: onNodeChangeData,
-                      onAddChild: onAddChild,
-                      onDelete: (id) => onDeleteStep(id),
-                  },
-              };
+      const usedHandles = outgoingEdges.map(e => e.sourceHandle);
+      let handleId = 'handle-0';
+      for (let i = 0; i < 4; i++) {
+          if (!usedHandles.includes(`handle-${i}`)) {
+              handleId = `handle-${i}`;
+              break;
+          }
+      }
+      const handleIndex = parseInt(handleId.split('-')[1]);
+      const newId = uuidv4();
+      
+      const newNode: Node<StepNodeData> = {
+          id: newId,
+          type: 'step',
+          position: { x: parentNode.position.x, y: parentNode.position.y + 250 },
+          data: {
+              title: 'Nowa Opcja',
+              description: '',
+              onChange: onNodeChangeData,
+              onAddChild: onAddChild,
+              onDelete: onDeleteStep,
+          },
+      };
 
-              setTimeout(() => setNodes(prev => prev.concat(newNode)), 0);
-
-              return addEdge({ 
-                  id: `e${parentId}-${newId}`, 
-                  source: parentNode.id, 
-                  sourceHandle: handleId,
-                  target: newId, 
-                  targetHandle: `target-${handleIndex}`,
-                  label: 'Dalej',
-                  style: { stroke: EDGE_COLORS[handleIndex % EDGE_COLORS.length], strokeWidth: 2 }
-              }, eds);
-          });
-          return nds;
-      });
-  }, [onNodeChangeData, onDeleteStep]);
+      setNodes((nds) => nds.concat(newNode));
+      setEdges((eds) => addEdge({ 
+          id: `e${parentId}-${newId}`, 
+          source: parentId, 
+          sourceHandle: handleId,
+          target: newId, 
+          targetHandle: `target-${handleIndex}`,
+          label: 'Dalej',
+          style: { stroke: EDGE_COLORS[handleIndex % EDGE_COLORS.length], strokeWidth: 2 }
+      }, eds));
+  }, [getNodes, getEdges, onNodeChangeData, onDeleteStep]);
 
   // Initial nodes
   const defaultNodes: Node<StepNodeData>[] = useMemo(() => [
