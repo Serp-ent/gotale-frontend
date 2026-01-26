@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: GoTale API
-  version: 0.18.1
+  version: 0.19.0
   description: API for zesp11 GoTale app.
 paths:
   /api/auth/register/:
@@ -528,6 +528,29 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/scenarios/{id}/full/:
+    get:
+      operationId: scenarios_full_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this scenario.
+        required: true
+      tags:
+      - scenarios
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Scenario'
+          description: ''
   /api/users/:
     get:
       operationId: users_list
@@ -754,8 +777,12 @@ components:
         text:
           type: string
           maxLength: 50
+        next:
+          type: string
+          format: uuid
       required:
       - id
+      - next
       - text
     ChoiceCreate:
       type: object

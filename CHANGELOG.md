@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.14.0
+
+- Updated Scenario Details page (`/scenarios/[id]`) to use `scenariosFullRetrieve` and provide an "Edit in Creator" button.
+- Regenerated API client to support new endpoints and schema changes.
+
 ## 0.13.0
 
 - Improved Gamebook Creator with split connections for better visibility of parallel paths.

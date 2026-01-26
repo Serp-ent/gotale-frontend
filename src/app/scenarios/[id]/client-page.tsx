@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { ScenariosApi, Configuration, Scenario } from '@/lib/api';
 import { axiosInstance, useAuth } from '@/app/components/auth-provider';
-import { Loader2, User, Calendar, Clock, PlayCircle } from "lucide-react";
+import { Loader2, User, Calendar, Clock, Edit } from "lucide-react";
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,8 @@ import { Button } from '@/components/ui/button';
 export default function ScenarioDetailPage() {
   const params = useParams();
   const id = params?.id as string;
-  const { token } = useAuth();
+  const router = useRouter();
+  const { token, user } = useAuth();
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +27,8 @@ export default function ScenarioDetailPage() {
             accessToken: token || undefined
         });
         const scenariosApi = new ScenariosApi(apiConfig, undefined, axiosInstance);
-        const response = await scenariosApi.scenariosRetrieve(id);
+        // Use the new full retrieve endpoint
+        const response = await scenariosApi.scenariosFullRetrieve(id);
         setScenario(response.data);
       } catch (error: any) {
         console.error("Failed to fetch scenario", error);
@@ -40,6 +42,10 @@ export default function ScenarioDetailPage() {
 
     fetchScenario();
   }, [id, token]);
+
+  const handleEditInCreator = () => {
+      router.push(`/creator?edit=${id}`);
+  };
 
   if (isLoading) {
     return (
@@ -65,32 +71,48 @@ export default function ScenarioDetailPage() {
     );
   }
 
+  const canEdit = user && scenario.created_by && (
+      (typeof scenario.created_by === 'string' && scenario.created_by === user.id) ||
+      (typeof scenario.created_by === 'object' && 'id' in scenario.created_by && scenario.created_by.id === user.id)
+  );
+
   return (
     <div className="container mx-auto mt-20 p-4 max-w-4xl">
       <div className="bg-card text-card-foreground rounded-xl shadow-lg border border-border overflow-hidden">
         {/* Header */}
-        <div className="bg-muted/30 p-8 border-b border-border">
-            <h1 className="text-4xl font-bold mb-4">{scenario.title}</h1>
-            <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
-                {scenario.created_by && (
-                    <Link href={`/user/${scenario.created_by.id}`} className="flex items-center hover:text-accent transition-colors">
-                        <User size={16} className="mr-2" />
-                        {scenario.created_by.username}
-                    </Link>
-                )}
-                {scenario.created_at && (
-                    <span className="flex items-center">
-                        <Calendar size={16} className="mr-2" />
-                        Utworzono: {new Date(scenario.created_at).toLocaleDateString()}
-                    </span>
-                )}
-                {scenario.modified_at && (
-                    <span className="flex items-center">
-                        <Clock size={16} className="mr-2" />
-                        Zaktualizowano: {new Date(scenario.modified_at).toLocaleDateString()}
-                    </span>
-                )}
+        <div className="bg-muted/30 p-8 border-b border-border flex flex-col md:flex-row justify-between items-start gap-4">
+            <div>
+                <h1 className="text-4xl font-bold mb-4">{scenario.title}</h1>
+                <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
+                    {scenario.created_by && (
+                        <div className="flex items-center">
+                            <User size={16} className="mr-2" />
+                            {typeof scenario.created_by === 'object' && 'username' in scenario.created_by 
+                                ? (scenario.created_by as any).username 
+                                : 'Autor'}
+                        </div>
+                    )}
+                    {scenario.created_at && (
+                        <span className="flex items-center">
+                            <Calendar size={16} className="mr-2" />
+                            Utworzono: {new Date(scenario.created_at).toLocaleDateString()}
+                        </span>
+                    )}
+                    {scenario.modified_at && (
+                        <span className="flex items-center">
+                            <Clock size={16} className="mr-2" />
+                            Zaktualizowano: {new Date(scenario.modified_at).toLocaleDateString()}
+                        </span>
+                    )}
+                </div>
             </div>
+            
+            {canEdit && (
+                <Button onClick={handleEditInCreator} className="bg-accent text-white hover:bg-accent/90 shrink-0">
+                    <Edit size={16} className="mr-2" />
+                    Edytuj w Kreatorze
+                </Button>
+            )}
         </div>
 
         {/* Content */}
@@ -99,24 +121,6 @@ export default function ScenarioDetailPage() {
                 <h3 className="text-xl font-semibold mb-2">Opis</h3>
                 <p className="whitespace-pre-wrap">{scenario.description || "Brak opisu."}</p>
             </div>
-
-            {scenario.root_step && (
-                <div className="bg-accent/5 dark:bg-accent/10 p-6 rounded-lg border border-accent/20">
-                    <h3 className="text-lg font-bold mb-2 flex items-center text-accent">
-                        <PlayCircle className="mr-2" /> Początek historii
-                    </h3>
-                    <p className="italic text-muted-foreground mb-4">
-                        "{scenario.root_step.title}"
-                    </p>
-                    <p className="mb-4">
-                        {scenario.root_step.description}
-                    </p>
-                    {/* Placeholder for future "Play" functionality */}
-                    <Button className="w-full sm:w-auto bg-accent text-white hover:bg-accent/90">
-                        Rozpocznij przygodę
-                    </Button>
-                </div>
-            )}
         </div>
       </div>
     </div>
