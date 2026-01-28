@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.14.2
+
+- Removed junk code.
+- Updated `backend-schema.yml`.
+
 ## 0.14.1
 
 - Fixed a bug in the Gamebook Creator where clicking the "Quick Add" button (plus icon) created multiple duplicate nodes instead of one.

@@ -85,7 +85,7 @@ export default function Page() {
                 Specyfikacja funkcjonalna
               </Link>
               <span className='ml-2 text-sm text-muted-foreground italic'>
-                (nieaktualne — część starego projektu programowania zespołowego)
+                (nieaktualne - część starego projektu programowania zespołowego)
               </span>
             </li>
           </ul>
