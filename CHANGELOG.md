@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.15.0
+
+- Refactored API client and Axios instance handling to improve code quality and maintainability.
+  - Centralized Axios instance in `src/lib/axios.ts`.
+  - Created a `useApi` hook (`src/lib/hooks/use-api.ts`) to provide memoized API clients.
+  - Centralized server URL configuration in `src/lib/config.ts`.
+- Removed unused image assets from the `public` directory.
+- Fixed a bug in `AuthProvider` where `AuthContext` was not found.
+
 ## 0.14.2
 
 - Removed junk code.
